@@ -1,0 +1,23 @@
+{
+  "author": "Lwcl_",
+  "name": "ExpressJS-API",
+  "version": "1.0.0",
+  "description": "API Server built with ExpressJS and MongoDB",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js"
+  },
+  "license": "ISC",
+  "keywords": [],
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.4.3",
+    "mysql": "^2.18.1",
+    "winston": "^3.13.0"
+  }
+}
