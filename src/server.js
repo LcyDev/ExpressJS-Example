@@ -37,77 +37,97 @@ mongoose.connect(process.env.MONGODB_URI, {})
 // Define API endpoints
 const apiEndpoints = {
     products: {
-        getProducts: {
+        getAllProducts: {
             method: 'GET',
             path: '/products',
-            description: 'Obtener todos los productos',
+            description: 'Get all products',
+        },
+        getProduct: {
+            method: 'GET',
+            path: '/products/:id',
+            description: 'Get an existing product',
         },
         createProduct: {
             method: 'POST',
             path: '/products',
-            description: 'Crear un nuevo producto',
+            description: 'Create a new product',
         },
-        createMultipleProducts: {
+        bulkCreateProducts: {
             method: 'POST',
-            path: '/products/multiple',
-            description: 'Crear múltiples productos',
+            path: '/products/bulk',
+            description: 'Create multiple new products',
         },
         updateProduct: {
             method: 'PUT',
             path: '/products/:id',
-            description: 'Actualizar un producto',
+            description: 'Update an existing product',
         },
-        updateMultipleProducts: {
+        bulkUpdateProducts: {
             method: 'PUT',
-            path: '/products/multiple',
-            description: 'Actualizar múltiples productos',
+            path: '/products/bulk',
+            description: 'Update multiple existing products',
         },
         deleteProduct: {
             method: 'DELETE',
             path: '/products/:id',
-            description: 'Eliminar un producto',
+            description: 'Delete a product',
+        },
+        bulkDeleteProducts: {
+            method: 'DELETE',
+            path: '/products/bulk',
+            description: 'Delete a product',
         },
         deleteAllProducts: {
             method: 'DELETE',
             path: '/products',
-            description: 'Eliminar todos los productos',
+            description: 'Delete all products',
         },
     },
     users: {
-        getUsers: {
+        getAllUsers: {
             method: 'GET',
             path: '/users',
-            description: 'Obtener todos los usuarios',
+            description: 'Get all users',
+        },
+        getUser: {
+            method: 'GET',
+            path: '/users/:id',
+            description: 'Get an existing user',
         },
         createUser: {
             method: 'POST',
             path: '/users',
-            description: 'Crear un nuevo usuario',
+            description: 'Create a new user',
         },
-        createMultipleUsers: {
+        bulkCreateUsers: {
             method: 'POST',
-            path: '/users/multiple',
-            description: 'Crear múltiples usuarios',
+            path: '/users/bulk',
+            description: 'Create multiple new users',
         },
         updateUser: {
             method: 'PUT',
             path: '/users/:id',
-            description: 'Actualizar un usuario',
+            description: 'Update an existing user',
         },
-        updateMultipleUsers: {
+        bulkUpdateUsers: {
             method: 'PUT',
-            path: '/users/multiple',
-            description: 'Actualizar múltiples usuarios',
+            path: '/users/bulk',
+            description: 'Update multiple existing users',
         },
         deleteUser: {
             method: 'DELETE',
             path: '/users/:id',
-            description: 'Eliminar un usuario',
+            description: 'Delete a user',
+        },
+        bulkDeleteUsers: {
+            method: 'DELETE',
+            path: '/users/bulk',
+            description: 'Delete multiple users',
         },
         deleteAllUsers: {
             method: 'DELETE',
             path: '/users',
-            description: 'Eliminar todos los usuarios',
+            description: 'Delete all users',
         },
     },
 };
