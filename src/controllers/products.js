@@ -1,117 +1,104 @@
 import Product from '../models/Product.js';
 import errorHandler from '../utils/errorHandler.js';
-import mongoose from 'mongoose';
+import mongoose from 'ongoose';
 
-async function getProducts(req, res) {
+const getProducts = async (req, res) => {
     console.log('(GET) Getting all products...');
-    Product.find()
-    .then(products => {
-        console.log(`Found ${products.length} products`);
+    try {
+        const products = await Product.find();
         res.status(200).json(products);
-    })
-    .catch(error => {
+        console.log(`Found ${products.length} products`);
+    } catch (error) {
         errorHandler(res, error, 'Error fetching products');
-    });
-}
-
-async function createProduct(req, res) {
-    console.log('(POST) Creating new product...', req.body);
-    const { name, price, description } = req.body;
-    const newProduct = new Product({ name, price, description });
-    await newProduct.save()
-    .then(savedProduct => {
-        console.log(`(201) Product created: ${savedProduct.name}`);
-        res.status(201).json(savedProduct);
-    })
-    .catch(error => {
-        errorHandler(res, error, 'Error creating product');
-    });
-}
-
-async function createMultipleProducts(req, res) {
-    console.log('(POST) Creating multiple products...', req.body);
-    const productsToCreate = req.body;
-    const createdProducts = productsToCreate.map(product => {
-        return new Product(product).save();
-    });
-    await Promise.all(createdProducts)
-    .then(createdProducts => {
-        console.log(`(201) ${createdProducts.length} products created`);
-        res.status(201).json(createdProducts);
-    })
-    .catch(error => {
-        errorHandler(res, error, 'Error creating multiple products');
-    });
-}
-
-async function updateProduct(req, res) {
-    console.log('(PUT) Updating product...', req.body);
-    const id = req.params.id;
-    if (!mongoose.isValidObjectId(id)) {
-        errorHandler(res, new Error('Invalid ObjectId'), undefined, 400);
-        return;
     }
-    Product.findByIdAndUpdate(id, req.body, { new: true })
-    .then(product => {
+};
+
+const createProduct = async (req, res) => {
+    console.log('(POST) Creating new product...', req.body);
+    try {
+        const { name, price, description } = req.body;
+        const newProduct = new Product({ name, price, description });
+        const savedProduct = await newProduct.save();
+        res.status(201).json(savedProduct);
+        console.log(`(201) Product created: ${savedProduct.name}`);
+    } catch (error) {
+        errorHandler(res, error, 'Error creating product');
+    }
+};
+
+const createMultipleProducts = async (req, res) => {
+    console.log('(POST) Creating multiple products...', req.body);
+    try {
+        const productsToCreate = req.body;
+        const createdProducts = await Promise.all(productsToCreate.map(product => new Product(product).save()));
+        res.status(201).json(createdProducts);
+        console.log(`(201) ${createdProducts.length} products created`);
+    } catch (error) {
+        errorHandler(res, error, 'Error creating multiple products');
+    }
+};
+
+const updateProduct = async (req, res) => {
+    console.log('(PUT) Updating product...', req.body);
+    try {
+        const id = req.params.id;
+        if (!mongoose.isValidObjectId(id)) {
+            errorHandler(res, new Error('Invalid ObjectId'), undefined, 400);
+            return;
+        }
+        const product = await Product.findByIdAndUpdate(id, req.body, { new: true });
         if (!product) {
             errorHandler(res, new Error('Product not found'), undefined, 404);
             return;
         }
-        console.log(`(200) Product updated: ${product.name}`);
         res.status(200).json(product);
-    })
-    .catch(error => {
+        console.log(`(200) Product updated: ${product.name}`);
+    } catch (error) {
         errorHandler(res, error, 'Error updating product');
-    });
-}
-
-async function updateMultipleProducts(req, res) {
-    console.log('(PUT) Updating multiple products...', req.body);
-    const productsToUpdate = req.body;
-    const updates = productsToUpdate.map(product => {
-        return Product.findByIdAndUpdate(product.id, product, { new: true });
-    });
-    await Promise.all(updates)
-    .then(updatedProducts => {
-        console.log(`(200) ${updatedProducts.length} products updated`);
-        res.status(200).json(updatedProducts);
-    })
-    .catch(error => {
-        errorHandler(res, error, 'Error updating multiple products');
-    });
-}
-
-async function deleteProduct(req, res) {
-    console.log('(DELETE) Deleting product...', req.params.id);
-    const id = req.params.id;
-    if (!mongoose.isValidObjectId(id)) {
-        errorHandler(res, new Error('Invalid ObjectId'), undefined, 400);
-        return;
     }
-    Product.findByIdAndDelete(id)
-    .then(deletedProduct => {
+};
+
+const updateMultipleProducts = async (req, res) => {
+    console.log('(PUT) Updating multiple products...', req.body);
+    try {
+        const productsToUpdate = req.body;
+        const updatedProducts = await Promise.all(productsToUpdate.map(product => Product.findByIdAndUpdate(product.id, product, { new: true })));
+        res.status(200).json(updatedProducts);
+        console.log(`(200) ${updatedProducts.length} products updated`);
+    } catch (error) {
+        errorHandler(res, error, 'Error updating multiple products');
+    }
+};
+
+const deleteProduct = async (req, res) => {
+    console.log('(DELETE) Deleting product...', req.params.id);
+    try {
+        const id = req.params.id;
+        if (!mongoose.isValidObjectId(id)) {
+            errorHandler(res, new Error('Invalid ObjectId'), undefined, 400);
+            return;
+        }
+        const deletedProduct = await Product.findByIdAndDelete(id);
         if (!deletedProduct) {
             errorHandler(res, new Error('Product not found'), undefined, 404);
             return;
         }
+        res.status(200).json({ message: `Product deleted: ${deletedProduct.name}` });
         console.log(`(200) Product deleted: ${deletedProduct.name}`);
-        res.status(200).json({ message: `Producto eliminado: ${deletedProduct.name}` });
-    })
-    .catch(error => {
+    } catch (error) {
         errorHandler(res, error, 'Error deleting product');
-    });
-}
+    }
+};
 
-async function deleteAllProducts(req, res) {
+const deleteAllProducts = async (req, res) => {
     console.log('(DELETE) Deleting all products...');
-    Product.deleteMany({})
-    .then(result => {
+    try {
+        const result = await Product.deleteMany({});
+        res.status(200).json({ message: `Deleted ${result.deletedCount} products` });
         console.log(`(200) ${result.deletedCount} products deleted`);
-        res.status(200).json({ message: `All products deleted` });
-    })
-    .catch(error => {
+    } catch (error) {
         errorHandler(res, error, 'Error deleting all products');
-    });
-}
+    }
+};
 
 export default { getProducts, createProduct, createMultipleProducts, updateProduct, updateMultipleProducts, deleteProduct, deleteAllProducts };
