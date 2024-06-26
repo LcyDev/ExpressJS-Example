@@ -16,11 +16,11 @@ async function getUsers(req, res) {
 
 async function createUser(req, res) {
     console.log('(POST) Creating new user...', req.body);
-    const { nombre, edad, email } = req.body;
-    const user = new User({ nombre, edad, email });
+    const { name, age, email } = req.body;
+    const user = new User({ name, age, email });
     await user.save()
     .then(savedUser => {
-        console.log(`(201) User created: ${savedUser.nombre}`);
+        console.log(`(201) User created: ${savedUser.name}`);
         res.status(201).json(savedUser);
     })
     .catch(error => {
@@ -57,7 +57,7 @@ async function updateUser(req, res) {
             errorHandler(res, new Error('User not found'), undefined, 404);
             return;
         }
-        console.log(`(200) User updated: ${user.nombre}`);
+        console.log(`(200) User updated: ${user.name}`);
         res.status(200).json(user);
     })
     .catch(error => {
@@ -94,7 +94,7 @@ async function deleteUser(req, res) {
             errorHandler(res, new Error('User not found'), undefined, 404);
             return;
         }
-        console.log(`(200) User deleted: ${deletedUser.nombre}`);
+        console.log(`(200) User deleted: ${deletedUser.name}`);
         res.status(200).json({ message: 'Usuario eliminado' });
     })
     .catch(error => {

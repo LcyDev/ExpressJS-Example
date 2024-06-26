@@ -70,8 +70,8 @@
 									"",
 									"pm.test(\"Returned JSON has expected properties\", function () {",
 									"    const responseData = pm.response.json();",
-									"    pm.expect(responseData).to.have.property('nombre');",
-									"    pm.expect(responseData).to.have.property('precio');",
+									"    pm.expect(responseData).to.have.property('name');",
+									"    pm.expect(responseData).to.have.property('price');",
 									"    pm.expect(responseData).to.have.property('descripcion');",
 									"    pm.expect(responseData).to.have.property('_id');",
 									"    pm.expect(responseData).to.have.property('__v');",
@@ -81,15 +81,15 @@
 									"  const responseData = pm.response.json();",
 									"  ",
 									"  pm.expect(responseData).to.be.an('object');",
-									"  pm.expect(responseData.nombre).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Product name should not be empty\");",
+									"  pm.expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Product name should not be empty\");",
 									"});",
 									"",
 									"",
 									"pm.test(\"Price is a non-negative number\", function () {",
 									"    const responseData = pm.response.json();",
 									"    ",
-									"    pm.expect(responseData.precio).to.be.a('number');",
-									"    pm.expect(responseData.precio).to.be.at.least(0);",
+									"    pm.expect(responseData.price).to.be.a('number');",
+									"    pm.expect(responseData.price).to.be.at.least(0);",
 									"});",
 									"",
 									"",
@@ -123,7 +123,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \"nombre\": \"New Product\", \"precio\": 10.99, \"descripcion\": \"Fresh from market\" }",
+							"raw": "{ \"name\": \"New Product\", \"price\": 10.99, \"descripcion\": \"Fresh from market\" }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -168,8 +168,8 @@
 									"",
 									"pm.test(\"Returned JSON has expected properties\", function () {",
 									"    const responseData = pm.response.json();",
-									"    pm.expect(responseData).to.have.property('nombre');",
-									"    pm.expect(responseData).to.have.property('precio');",
+									"    pm.expect(responseData).to.have.property('name');",
+									"    pm.expect(responseData).to.have.property('price');",
 									"    pm.expect(responseData).to.have.property('descripcion');",
 									"    pm.expect(responseData).to.have.property('_id');",
 									"    pm.expect(responseData).to.have.property('__v');",
@@ -179,15 +179,15 @@
 									"  const responseData = pm.response.json();",
 									"  ",
 									"  pm.expect(responseData).to.be.an('object');",
-									"  pm.expect(responseData.nombre).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Product name should not be empty\");",
+									"  pm.expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Product name should not be empty\");",
 									"});",
 									"",
 									"",
 									"pm.test(\"Price is a non-negative number\", function () {",
 									"    const responseData = pm.response.json();",
 									"    ",
-									"    pm.expect(responseData.precio).to.be.a('number');",
-									"    pm.expect(responseData.precio).to.be.at.least(0);",
+									"    pm.expect(responseData.price).to.be.a('number');",
+									"    pm.expect(responseData.price).to.be.at.least(0);",
 									"});",
 									"",
 									"",
@@ -221,7 +221,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[{\"nombre\": \"Product 2\", \"precio\": 11.99}, {\"nombre\": \"Product 3\", \"precio\": 13.99}]",
+							"raw": "[{\"name\": \"Product 2\", \"price\": 11.99}, {\"name\": \"Product 3\", \"price\": 13.99}]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -262,8 +262,8 @@
 									"\r",
 									"pm.test(\"Returned JSON has expected properties\", function () {\r",
 									"    const responseData = pm.response.json();\r",
-									"    pm.expect(responseData).to.have.property('nombre');\r",
-									"    pm.expect(responseData).to.have.property('precio');\r",
+									"    pm.expect(responseData).to.have.property('name');\r",
+									"    pm.expect(responseData).to.have.property('price');\r",
 									"    pm.expect(responseData).to.have.property('descripcion');\r",
 									"    pm.expect(responseData).to.have.property('_id');\r",
 									"    pm.expect(responseData).to.have.property('__v');\r",
@@ -273,15 +273,15 @@
 									"  const responseData = pm.response.json();\r",
 									"  \r",
 									"  pm.expect(responseData).to.be.an('object');\r",
-									"  pm.expect(responseData.nombre).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Product name should not be empty\");\r",
+									"  pm.expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Product name should not be empty\");\r",
 									"});\r",
 									"\r",
 									"\r",
 									"pm.test(\"Price is a non-negative number\", function () {\r",
 									"    const responseData = pm.response.json();\r",
 									"    \r",
-									"    pm.expect(responseData.precio).to.be.a('number');\r",
-									"    pm.expect(responseData.precio).to.be.at.least(0);\r",
+									"    pm.expect(responseData.price).to.be.a('number');\r",
+									"    pm.expect(responseData.price).to.be.at.least(0);\r",
 									"});\r",
 									"\r",
 									"\r",
@@ -315,7 +315,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \"nombre\": \"Updated Product\", \"precio\": 12.99, \"descripcion\": \"A brand new look\" }",
+							"raw": "{ \"name\": \"Updated Product\", \"price\": 12.99, \"descripcion\": \"A brand new look\" }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -473,7 +473,7 @@
 									"});",
 									"",
 									"pm.test(\"Returned JSON has expected properties\", function () {",
-									"    pm.expect(responseData).to.have.property('nombre');",
+									"    pm.expect(responseData).to.have.property('name');",
 									"    pm.expect(responseData).to.have.property('edad');",
 									"    pm.expect(responseData).to.have.property('email');",
 									"    pm.expect(responseData).to.have.property('_id');",
@@ -481,8 +481,8 @@
 									"});",
 									"",
 									"",
-									"pm.test(\"Nombre is a non-empty string\", function () {    ",
-									"    pm.expect(responseData.nombre).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"pm.test(\"name is a non-empty string\", function () {    ",
+									"    pm.expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
 									"});",
 									"",
 									"pm.test(\"Edad is a non-negative integer\", function () {    ",
@@ -517,7 +517,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \"nombre\": \"New User\", \"edad\": 18, \"email\": \"newuser@example.com\" }",
+							"raw": "{ \"name\": \"New User\", \"edad\": 18, \"email\": \"newuser@example.com\" }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -588,7 +588,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "[{\"nombre\": \"User 2\", \"edad\": 21, \"email\": \"user2@example.com\"}, {\"nombre\": \"User 3\", \"edad\": 19, \"email\": \"user3@example.com\"}]",
+							"raw": "[{\"name\": \"User 2\", \"edad\": 21, \"email\": \"user2@example.com\"}, {\"name\": \"User 3\", \"edad\": 19, \"email\": \"user3@example.com\"}]",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -628,7 +628,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"Returned JSON has expected properties\", function () {\r",
-									"    pm.expect(responseData).to.have.property('nombre');\r",
+									"    pm.expect(responseData).to.have.property('name');\r",
 									"    pm.expect(responseData).to.have.property('edad');\r",
 									"    pm.expect(responseData).to.have.property('email');\r",
 									"    pm.expect(responseData).to.have.property('_id');\r",
@@ -636,8 +636,8 @@
 									"});\r",
 									"\r",
 									"\r",
-									"pm.test(\"Nombre is a non-empty string\", function () {    \r",
-									"    pm.expect(responseData.nombre).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+									"pm.test(\"name is a non-empty string\", function () {    \r",
+									"    pm.expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Edad is a non-negative integer\", function () {    \r",
@@ -672,7 +672,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \"nombre\": \"Updated User\", \"edad\": 18, \"email\": \"updateduser@example.com\" }",
+							"raw": "{ \"name\": \"Updated User\", \"edad\": 18, \"email\": \"updateduser@example.com\" }",
 							"options": {
 								"raw": {
 									"language": "json"

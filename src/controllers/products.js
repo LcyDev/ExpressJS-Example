@@ -16,11 +16,11 @@ async function getProducts(req, res) {
 
 async function createProduct(req, res) {
     console.log('(POST) Creating new product...', req.body);
-    const { nombre, precio, descripcion } = req.body;
-    const newProduct = new Product({ nombre, precio, descripcion });
+    const { name, price, description } = req.body;
+    const newProduct = new Product({ name, price, description });
     await newProduct.save()
     .then(savedProduct => {
-        console.log(`(201) Product created: ${savedProduct.nombre}`);
+        console.log(`(201) Product created: ${savedProduct.name}`);
         res.status(201).json(savedProduct);
     })
     .catch(error => {
@@ -57,7 +57,7 @@ async function updateProduct(req, res) {
             errorHandler(res, new Error('Product not found'), undefined, 404);
             return;
         }
-        console.log(`(200) Product updated: ${product.nombre}`);
+        console.log(`(200) Product updated: ${product.name}`);
         res.status(200).json(product);
     })
     .catch(error => {
@@ -94,8 +94,8 @@ async function deleteProduct(req, res) {
             errorHandler(res, new Error('Product not found'), undefined, 404);
             return;
         }
-        console.log(`(200) Product deleted: ${deletedProduct.nombre}`);
-        res.status(200).json({ message: `Producto eliminado: ${deletedProduct.nombre}` });
+        console.log(`(200) Product deleted: ${deletedProduct.name}`);
+        res.status(200).json({ message: `Producto eliminado: ${deletedProduct.name}` });
     })
     .catch(error => {
         errorHandler(res, error, 'Error deleting product');
