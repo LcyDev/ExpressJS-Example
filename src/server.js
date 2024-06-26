@@ -12,6 +12,11 @@ import logger from './utils/logger.js'
 // Initialize
 dotenv.config();
 
+if (!process.env.MONGODB_URI) {
+    logger.error('Error: MONGODB_URI environment variable not defined');
+    process.exit(1);
+}
+
 const app = express();
 const PORT = process.env.PORT || 8080;
 
@@ -26,6 +31,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(endpointLogger);
 
 mongoose.connect(process.env.MONGODB_URI, {})
+    .then(() => logger.info('Connected to MongoDB'))
+    .catch((err) => logger.error('Error connecting to MongoDB:', err));
 
 // Define API endpoints
 const apiEndpoints = {
