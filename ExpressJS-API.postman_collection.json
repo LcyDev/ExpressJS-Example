@@ -144,7 +144,7 @@
 					"response": []
 				},
 				{
-					"name": "createMultipleProducts",
+					"name": "bulkCreateProducts",
 					"event": [
 						{
 							"listen": "test",
@@ -229,13 +229,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}{{port}}/products/multiple",
+							"raw": "{{host}}{{port}}/products/bulk",
 							"host": [
 								"{{host}}{{port}}"
 							],
 							"path": [
 								"products",
-								"multiple"
+								"bulk"
 							]
 						}
 					},
@@ -538,7 +538,7 @@
 					"response": []
 				},
 				{
-					"name": "createMultipleUsers",
+					"name": "bulkCreateUsers",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -596,13 +596,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}{{port}}/users/multiple",
+							"raw": "{{host}}{{port}}/users/bulk",
 							"host": [
 								"{{host}}{{port}}"
 							],
 							"path": [
 								"users",
-								"multiple"
+								"bulk"
 							]
 						}
 					},
