@@ -11,18 +11,21 @@ import logger from './utils/logger.js'
 
 // Initialize
 dotenv.config();
-mongoose.connect(process.env.MONGODB_URI, {});
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
 // Enable access from any origin
 app.use(cors());
+
 // Handle requests in JSON format
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
 // Log http requests
 app.use(endpointLogger);
+
+mongoose.connect(process.env.MONGODB_URI, {})
 
 // Define API endpoints
 const apiEndpoints = {
@@ -106,9 +109,10 @@ function registerResource(resource, controller) {
     Object.keys(apiEndpoints[resource]).forEach((func) => {
         const endpoint = apiEndpoints[resource][func];
         app[endpoint.method.toLowerCase()](endpoint.path, controller[func]);
-        logger.info(`Ruta (${endpoint.method}) ${endpoint.path} registrada -> ${func}()`);
+        logger.info(`Route (${endpoint.method}) ${endpoint.path} registered -> ${func}()`);
     });
 }
+
 // Register API endpoints
 registerResource('products', productCtrl)
 registerResource('users', userCtrl)
@@ -121,18 +125,18 @@ app.get('/', (req, res) => {
 // Handle 404 errors
 app.use((req, res, next) => {
     logger.info(`The specified resource doesn't exist: ${req.path}`);
-    res.status(404).send(`No se encontró la ruta ${req.path} (404)`);
+    res.status(404).send(`Resource not found ${req.path}`);
 });
 
 // Handle global errors
 app.use((err, req, res, next) => {
     logger.error(err);
     res.status(500).json({
-        message: 'Error interno del servidor',
+        message: 'Internal server error',
         error: err.message
     });
 });
 
 app.listen(PORT, () => {
-    logger.info(`Servidor Express iniciado en el puerto {${PORT}}`);
+    logger.info(`Express Server started and listening in port {${PORT}}`);
 });
