@@ -133,6 +133,7 @@ const apiEndpoints = {
 };
 
 function registerResource(resource, controller) {
+    logger.info(`Registering endpoints for ${resource}`)
     Object.keys(apiEndpoints[resource]).forEach((func) => {
         const endpoint = apiEndpoints[resource][func];
         app[endpoint.method.toLowerCase()](endpoint.path, controller[func]);
