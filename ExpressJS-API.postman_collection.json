@@ -1,0 +1,841 @@
+{
+	"info": {
+		"_postman_id": "325a2067-c691-4a47-9fd2-0153e963fdea",
+		"name": "ExpressJS-API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29052998"
+	},
+	"item": [
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "getProducts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"JSON Contains List\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an(\"array\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}{{port}}/products",
+							"host": [
+								"{{host}}{{port}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createProduct",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"",
+									"if (responseData._id) {",
+									"    pm.collectionVariables.set(\"latestProductID\", responseData._id);",
+									"}",
+									"",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});",
+									"",
+									"pm.test(\"Response body has valid content type\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"    let header = pm.response.headers.get(\"Content-Type\");",
+									"    pm.expect(header).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Returned JSON has expected properties\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData).to.have.property('nombre');",
+									"    pm.expect(responseData).to.have.property('precio');",
+									"    pm.expect(responseData).to.have.property('descripcion');",
+									"    pm.expect(responseData).to.have.property('_id');",
+									"    pm.expect(responseData).to.have.property('__v');",
+									"});",
+									"",
+									"pm.test(\"Product name is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.nombre).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Product name should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Price is a non-negative number\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.precio).to.be.a('number');",
+									"    pm.expect(responseData.precio).to.be.at.least(0);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Description is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.descripcion).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");",
+									"});",
+									"",
+									"pm.test(\"_id is a non-empty string\", function () {    ",
+									"    pm.expect(responseData._id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"pm.test(\"__v is a non-negative integer\", function () {    ",
+									"    pm.expect(responseData.__v).to.be.a('number').and.to.satisfy((num) => num >= 0, \"Value should be non-negative\");",
+									"});",
+									"",
+									"pm.test(\"Response time is within acceptable limits\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"nombre\": \"New Product\", \"precio\": 10.99, \"descripcion\": \"Fresh from market\" }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}{{port}}/products/",
+							"host": [
+								"{{host}}{{port}}"
+							],
+							"path": [
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createMultipleProducts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"",
+									"if (responseData._id) {",
+									"    pm.collectionVariables.set(\"latestProductID\", responseData._id);",
+									"}",
+									"",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});",
+									"",
+									"pm.test(\"Response body has valid content type\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"    let header = pm.response.headers.get(\"Content-Type\");",
+									"    pm.expect(header).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Returned JSON has expected properties\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData).to.have.property('nombre');",
+									"    pm.expect(responseData).to.have.property('precio');",
+									"    pm.expect(responseData).to.have.property('descripcion');",
+									"    pm.expect(responseData).to.have.property('_id');",
+									"    pm.expect(responseData).to.have.property('__v');",
+									"});",
+									"",
+									"pm.test(\"Product name is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.nombre).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Product name should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Price is a non-negative number\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData.precio).to.be.a('number');",
+									"    pm.expect(responseData.precio).to.be.at.least(0);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Description is a non-empty string\", function () {",
+									"  const responseData = pm.response.json();",
+									"  ",
+									"  pm.expect(responseData).to.be.an('object');",
+									"  pm.expect(responseData.descripcion).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");",
+									"});",
+									"",
+									"pm.test(\"_id is a non-empty string\", function () {    ",
+									"    pm.expect(responseData._id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"pm.test(\"__v is a non-negative integer\", function () {    ",
+									"    pm.expect(responseData.__v).to.be.a('number').and.to.satisfy((num) => num >= 0, \"Value should be non-negative\");",
+									"});",
+									"",
+									"pm.test(\"Response time is within acceptable limits\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[{\"nombre\": \"Product 2\", \"precio\": 11.99}, {\"nombre\": \"Product 3\", \"precio\": 13.99}]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}{{port}}/products/multiple",
+							"host": [
+								"{{host}}{{port}}"
+							],
+							"path": [
+								"products",
+								"multiple"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateProduct",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body has valid content type\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    let header = pm.response.headers.get(\"Content-Type\");\r",
+									"    pm.expect(header).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Returned JSON has expected properties\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.have.property('nombre');\r",
+									"    pm.expect(responseData).to.have.property('precio');\r",
+									"    pm.expect(responseData).to.have.property('descripcion');\r",
+									"    pm.expect(responseData).to.have.property('_id');\r",
+									"    pm.expect(responseData).to.have.property('__v');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Product name is a non-empty string\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData).to.be.an('object');\r",
+									"  pm.expect(responseData.nombre).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Product name should not be empty\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Price is a non-negative number\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData.precio).to.be.a('number');\r",
+									"    pm.expect(responseData.precio).to.be.at.least(0);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Description is a non-empty string\", function () {\r",
+									"  const responseData = pm.response.json();\r",
+									"  \r",
+									"  pm.expect(responseData).to.be.an('object');\r",
+									"  pm.expect(responseData.descripcion).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"_id is a non-empty string\", function () {    \r",
+									"    pm.expect(responseData._id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"__v is a non-negative integer\", function () {    \r",
+									"    pm.expect(responseData.__v).to.be.a('number').and.to.satisfy((num) => num >= 0, \"Value should be non-negative\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is within acceptable limits\", function () {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"nombre\": \"Updated Product\", \"precio\": 12.99, \"descripcion\": \"A brand new look\" }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}{{port}}/products/{{latestProductID}}",
+							"host": [
+								"{{host}}{{port}}"
+							],
+							"path": [
+								"products",
+								"{{latestProductID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteProduct",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has the required field - message\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    \r",
+									"    pm.expect(responseData).to.have.property('message');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}{{port}}/users/{{latestProductID}}",
+							"host": [
+								"{{host}}{{port}}"
+							],
+							"path": [
+								"users",
+								"{{latestProductID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteAllProducts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", function () {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"…  pm.expect(responseData.message).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}{{port}}/products/",
+							"host": [
+								"{{host}}{{port}}"
+							],
+							"path": [
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "createUser",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"",
+									"if (responseData._id) {",
+									"    pm.collectionVariables.set(\"latestUserID\", responseData._id);",
+									"}",
+									"",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});",
+									"",
+									"pm.test(\"Response body has valid content type\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"    let header = pm.response.headers.get(\"Content-Type\");",
+									"    pm.expect(header).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Returned JSON has expected properties\", function () {",
+									"    pm.expect(responseData).to.have.property('nombre');",
+									"    pm.expect(responseData).to.have.property('edad');",
+									"    pm.expect(responseData).to.have.property('email');",
+									"    pm.expect(responseData).to.have.property('_id');",
+									"    pm.expect(responseData).to.have.property('__v');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Nombre is a non-empty string\", function () {    ",
+									"    pm.expect(responseData.nombre).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"pm.test(\"Edad is a non-negative integer\", function () {    ",
+									"    pm.expect(responseData.edad).to.be.a('number').and.to.satisfy((num) => num >= 0, \"Value should be non-negative\");",
+									"});",
+									"",
+									"pm.test(\"Email is in a valid email format\", function () {    ",
+									"    pm.expect(responseData.email).to.be.a('string').and.to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email should be in a valid format\");",
+									"});",
+									"",
+									"pm.test(\"_id is a non-empty string\", function () {    ",
+									"    pm.expect(responseData._id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"pm.test(\"__v is a non-negative integer\", function () {    ",
+									"    pm.expect(responseData.__v).to.be.a('number').and.to.satisfy((num) => num >= 0, \"Value should be non-negative\");",
+									"});",
+									"",
+									"pm.test(\"Response time is within acceptable limits\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"nombre\": \"New User\", \"edad\": 18, \"email\": \"newuser@example.com\" }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}{{port}}/users/",
+							"host": [
+								"{{host}}{{port}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createMultipleUsers",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();",
+									"",
+									"if (responseData) {",
+									"    if (responseData[0]._id) {",
+									"        pm.collectionVariables.set(\"secondUserID\", responseData[0]._id);",
+									"    }",
+									"}",
+									"",
+									"pm.test(\"Successful POST request\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201, 202]);",
+									"});",
+									"",
+									"pm.test(\"Response body has valid content type\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"    let header = pm.response.headers.get(\"Content-Type\");",
+									"    pm.expect(header).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Response time is within acceptable limits\", function () {",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[{\"nombre\": \"User 2\", \"edad\": 21, \"email\": \"user2@example.com\"}, {\"nombre\": \"User 3\", \"edad\": 19, \"email\": \"user3@example.com\"}]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}{{port}}/users/multiple",
+							"host": [
+								"{{host}}{{port}}"
+							],
+							"path": [
+								"users",
+								"multiple"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body has valid content type\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"    let header = pm.response.headers.get(\"Content-Type\");\r",
+									"    pm.expect(header).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Returned JSON has expected properties\", function () {\r",
+									"    pm.expect(responseData).to.have.property('nombre');\r",
+									"    pm.expect(responseData).to.have.property('edad');\r",
+									"    pm.expect(responseData).to.have.property('email');\r",
+									"    pm.expect(responseData).to.have.property('_id');\r",
+									"    pm.expect(responseData).to.have.property('__v');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Nombre is a non-empty string\", function () {    \r",
+									"    pm.expect(responseData.nombre).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Edad is a non-negative integer\", function () {    \r",
+									"    pm.expect(responseData.edad).to.be.a('number').and.to.satisfy((num) => num >= 0, \"Value should be non-negative\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Email is in a valid email format\", function () {    \r",
+									"    pm.expect(responseData.email).to.be.a('string').and.to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email should be in a valid format\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"_id is a non-empty string\", function () {    \r",
+									"    pm.expect(responseData._id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"__v is a non-negative integer\", function () {    \r",
+									"    pm.expect(responseData.__v).to.be.a('number').and.to.satisfy((num) => num >= 0, \"Value should be non-negative\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is within acceptable limits\", function () {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"nombre\": \"Updated User\", \"edad\": 18, \"email\": \"updateduser@example.com\" }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}{{port}}/users/{{latestUserID}}",
+							"host": [
+								"{{host}}{{port}}"
+							],
+							"path": [
+								"users",
+								"{{latestUserID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteUser",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}{{port}}/users/{{secondUserID}}",
+							"host": [
+								"{{host}}{{port}}"
+							],
+							"path": [
+								"users",
+								"{{secondUserID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUsers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"JSON Contains List\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an(\"array\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}{{port}}/users",
+							"host": [
+								"{{host}}{{port}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteAllUsers",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}{{port}}/users",
+							"host": [
+								"{{host}}{{port}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "root-endpoints",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.globals.set(\"port\", \"8080\");"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "latestProductID",
+			"value": ""
+		},
+		{
+			"key": "latestUserID",
+			"value": ""
+		},
+		{
+			"key": "secondUserID",
+			"value": ""
+		}
+	]
+}
