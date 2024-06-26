@@ -1,8 +1,5 @@
-import winston from 'winston';
-import dateTimeFormat from './dateTimeFormat.js';
-
-const {format, transports} = winston;
-const {dateFormat, timeFormat} = dateTimeFormat;
+import winston, { format, transports } from 'winston';
+import { dateFormat, timeFormat } from './dateTimeFormat.js';
 
 const logFormat = format.printf( ({ level, message, timestamp, ...metadata }) => {
     const date = new Date(timestamp);
