@@ -90,8 +90,22 @@ const deleteProduct = async (req, res) => {
     }
 };
 
+const deleteMultipleProducts = async (req, res) => {
+    try {
+        const ids = req.body;
+        if (!ids || !ids.length) {
+            errorHandler(res, new Error('No product IDs provided'), undefined, 400);
+            return;
+        }
+        const deletedProducts = await Promise.all(ids.map(id => Product.findByIdAndDelete(id)));
+        res.status(200).json({ message: `${deletedProducts.length} products deleted` });
+    } catch (error) {
+        errorHandler(res, error, 'Error deleting multiple products');
+    }
+};
+
 const deleteAllProducts = async (req, res) => {
-    console.log('(DELETE) Deleting all products...');
+    console.log('(DELETE) Deleting multiple products...', req.body);
     try {
         const result = await Product.deleteMany({});
         res.status(200).json({ message: `Deleted ${result.deletedCount} products` });
@@ -101,4 +115,10 @@ const deleteAllProducts = async (req, res) => {
     }
 };
 
-export default { getProducts, createProduct, createMultipleProducts, updateProduct, updateMultipleProducts, deleteProduct, deleteAllProducts };
+export default {
+    getProducts,
+    createProduct, createMultipleProducts,
+    updateProduct, updateMultipleProducts,
+    deleteProduct, deleteMultipleProducts,
+    deleteAllProducts
+};

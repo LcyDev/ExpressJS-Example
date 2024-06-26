@@ -90,6 +90,22 @@ const deleteUser = async (req, res) => {
     }
 };
 
+const deleteMultipleUsers = async (req, res) => {
+    console.log('(DELETE) Deleting multiple users...', req.body);
+    try {
+        const ids = req.body;
+        if (!ids || !ids.length) {
+            errorHandler(res, new Error('No user IDs provided'), undefined, 400);
+            return;
+        }
+        const deletedUsers = await Promise.all(ids.map(id => User.findByIdAndDelete(id)));
+        res.status(200).json({ message: `${deletedUsers.length} users deleted` });
+        console.log(`(200) ${deletedUsers.length} users deleted`);
+    } catch (error) {
+        errorHandler(res, error, 'Error deleting multiple users');
+    }
+};
+
 const deleteAllUsers = async (req, res) => {
     console.log('(DELETE) Deleting all users...');
     try {
@@ -101,4 +117,10 @@ const deleteAllUsers = async (req, res) => {
     }
 };
 
-export default { getUsers, createUser, createMultipleUsers, updateUser, updateMultipleUsers, deleteUser, deleteAllUsers };
+export default {
+    getUsers,
+    createUser,createMultipleUsers,
+    updateUser, updateMultipleUsers,
+    deleteUser, deleteMultipleUsers,
+    deleteAllUsers
+};
