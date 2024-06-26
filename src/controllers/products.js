@@ -1,8 +1,9 @@
+import mongoose from 'mongoose';
+
 import Product from '../models/Product.js';
 import errorHandler from '../utils/errorHandler.js';
-import mongoose from 'ongoose';
 
-const getProducts = async (req, res) => {
+const getAllProducts = async (req, res) => {
     console.log('(GET) Getting all products...');
     try {
         const products = await Product.find();
@@ -10,6 +11,22 @@ const getProducts = async (req, res) => {
         console.log(`Found ${products.length} products`);
     } catch (error) {
         errorHandler(res, error, 'Error fetching products');
+    }
+};
+
+const getProduct = async (req, res) => {
+    console.log('(GET) Getting product...', req.params.id);
+    try {
+        const id = req.params.id;
+        const product = await Product.findById(id);
+        if (!product) {
+            errorHandler(res, new Error('Product not found'), undefined, 404);
+            return;
+        }
+        res.status(200).json(product);
+        console.log(`(200) Product found: ${product.name}`);
+    } catch (error) {
+        errorHandler(res, error, 'Error getting product');
     }
 };
 
@@ -26,7 +43,7 @@ const createProduct = async (req, res) => {
     }
 };
 
-const createMultipleProducts = async (req, res) => {
+const bulkCreateProducts = async (req, res) => {
     console.log('(POST) Creating multiple products...', req.body);
     try {
         const productsToCreate = req.body;
@@ -39,7 +56,8 @@ const createMultipleProducts = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-    console.log('(PUT) Updating product...', req.body);
+    console.log('(PUT) Updating product...', req.params.id);
+    console.log(req.body)
     try {
         const id = req.params.id;
         if (!mongoose.isValidObjectId(id)) {
@@ -58,7 +76,7 @@ const updateProduct = async (req, res) => {
     }
 };
 
-const updateMultipleProducts = async (req, res) => {
+const bulkUpdateProducts = async (req, res) => {
     console.log('(PUT) Updating multiple products...', req.body);
     try {
         const productsToUpdate = req.body;
@@ -90,7 +108,7 @@ const deleteProduct = async (req, res) => {
     }
 };
 
-const deleteMultipleProducts = async (req, res) => {
+const bulkDeleteProducts = async (req, res) => {
     console.log('(DELETE) Deleting multiple products...', req.body);
     try {
         const ids = req.body;
@@ -118,9 +136,10 @@ const deleteAllProducts = async (req, res) => {
 };
 
 export default {
-    getProducts,
-    createProduct, createMultipleProducts,
-    updateProduct, updateMultipleProducts,
-    deleteProduct, deleteMultipleProducts,
+    getProduct,
+    getAllProducts,
+    createProduct, bulkCreateProducts,
+    updateProduct, bulkUpdateProducts,
+    deleteProduct, bulkDeleteProducts,
     deleteAllProducts
 };

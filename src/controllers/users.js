@@ -1,8 +1,9 @@
-import User from '../models/User.js';
-import errorHandler from '../utils/errorHandler.js';
 import mongoose from 'mongoose';
 
-const getUsers = async (req, res) => {
+import User from '../models/User.js';
+import errorHandler from '../utils/errorHandler.js';
+
+const getAllUsers = async (req, res) => {
     console.log('(GET) Getting all users...');
     try {
         const users = await User.find();
@@ -10,6 +11,22 @@ const getUsers = async (req, res) => {
         console.log(`(200) Found ${users.length} users`);
     } catch (error) {
         errorHandler(res, error, 'Error fetching users');
+    }
+};
+
+const getUser = async (req, res) => {
+    console.log('(GET) Getting user...', req.params.id);
+    try {
+        const id = req.params.id;
+        const user = await User.findById(id);
+        if (!user) {
+            errorHandler(res, new Error('User not found'), undefined, 404);
+            return;
+        }
+        res.status(200).json(user);
+        console.log(`(200) User found: ${user.name}`);
+    } catch (error) {
+        errorHandler(res, error, 'Error getting user');
     }
 };
 
@@ -26,7 +43,7 @@ const createUser = async (req, res) => {
     }
 };
 
-const createMultipleUsers = async (req, res) => {
+const bulkCreateUsers = async (req, res) => {
     console.log('(POST) Creating multiple users...', req.body);
     try {
         const usersToCreate = req.body;
@@ -39,7 +56,8 @@ const createMultipleUsers = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-    console.log('(PUT) Updating user...', req.body);
+    console.log('(PUT) Updating user...', req.params.id);
+    console.log(req.body)
     try {
         const id = req.params.id;
         if (!mongoose.isValidObjectId(id)) {
@@ -58,7 +76,7 @@ const updateUser = async (req, res) => {
     }
 };
 
-const updateMultipleUsers = async (req, res) => {
+const bulkUpdateUsers = async (req, res) => {
     console.log('(PUT) Updating multiple users...', req.body);
     try {
         const usersToUpdate = req.body;
@@ -90,7 +108,7 @@ const deleteUser = async (req, res) => {
     }
 };
 
-const deleteMultipleUsers = async (req, res) => {
+const bulkDeleteUsers = async (req, res) => {
     console.log('(DELETE) Deleting multiple users...', req.body);
     try {
         const ids = req.body;
@@ -118,9 +136,10 @@ const deleteAllUsers = async (req, res) => {
 };
 
 export default {
-    getUsers,
-    createUser,createMultipleUsers,
-    updateUser, updateMultipleUsers,
-    deleteUser, deleteMultipleUsers,
+    getUser,
+    getAllUsers,
+    createUser, bulkCreateUsers,
+    updateUser, bulkUpdateUsers,
+    deleteUser, bulkDeleteUsers,
     deleteAllUsers
 };
