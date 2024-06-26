@@ -72,7 +72,7 @@
 									"    const responseData = pm.response.json();",
 									"    pm.expect(responseData).to.have.property('name');",
 									"    pm.expect(responseData).to.have.property('price');",
-									"    pm.expect(responseData).to.have.property('descripcion');",
+									"    pm.expect(responseData).to.have.property('description');",
 									"    pm.expect(responseData).to.have.property('_id');",
 									"    pm.expect(responseData).to.have.property('__v');",
 									"});",
@@ -97,7 +97,7 @@
 									"  const responseData = pm.response.json();",
 									"  ",
 									"  pm.expect(responseData).to.be.an('object');",
-									"  pm.expect(responseData.descripcion).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");",
+									"  pm.expect(responseData.description).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");",
 									"});",
 									"",
 									"pm.test(\"_id is a non-empty string\", function () {    ",
@@ -123,7 +123,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \"name\": \"New Product\", \"price\": 10.99, \"descripcion\": \"Fresh from market\" }",
+							"raw": "{ \"name\": \"New Product\", \"price\": 10.99, \"description\": \"Fresh from market\" }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -170,7 +170,7 @@
 									"    const responseData = pm.response.json();",
 									"    pm.expect(responseData).to.have.property('name');",
 									"    pm.expect(responseData).to.have.property('price');",
-									"    pm.expect(responseData).to.have.property('descripcion');",
+									"    pm.expect(responseData).to.have.property('description');",
 									"    pm.expect(responseData).to.have.property('_id');",
 									"    pm.expect(responseData).to.have.property('__v');",
 									"});",
@@ -195,7 +195,7 @@
 									"  const responseData = pm.response.json();",
 									"  ",
 									"  pm.expect(responseData).to.be.an('object');",
-									"  pm.expect(responseData.descripcion).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");",
+									"  pm.expect(responseData.description).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");",
 									"});",
 									"",
 									"pm.test(\"_id is a non-empty string\", function () {    ",
@@ -264,7 +264,7 @@
 									"    const responseData = pm.response.json();\r",
 									"    pm.expect(responseData).to.have.property('name');\r",
 									"    pm.expect(responseData).to.have.property('price');\r",
-									"    pm.expect(responseData).to.have.property('descripcion');\r",
+									"    pm.expect(responseData).to.have.property('description');\r",
 									"    pm.expect(responseData).to.have.property('_id');\r",
 									"    pm.expect(responseData).to.have.property('__v');\r",
 									"});\r",
@@ -289,7 +289,7 @@
 									"  const responseData = pm.response.json();\r",
 									"  \r",
 									"  pm.expect(responseData).to.be.an('object');\r",
-									"  pm.expect(responseData.descripcion).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");\r",
+									"  pm.expect(responseData.description).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");\r",
 									"});\r",
 									"\r",
 									"pm.test(\"_id is a non-empty string\", function () {    \r",
@@ -315,7 +315,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \"name\": \"Updated Product\", \"price\": 12.99, \"descripcion\": \"A brand new look\" }",
+							"raw": "{ \"name\": \"Updated Product\", \"price\": 12.99, \"description\": \"A brand new look\" }",
 							"options": {
 								"raw": {
 									"language": "json"
