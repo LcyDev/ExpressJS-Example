@@ -91,14 +91,16 @@ const deleteProduct = async (req, res) => {
 };
 
 const deleteMultipleProducts = async (req, res) => {
+    console.log('(DELETE) Deleting multiple products...', req.body);
     try {
         const ids = req.body;
         if (!ids || !ids.length) {
             errorHandler(res, new Error('No product IDs provided'), undefined, 400);
             return;
         }
-        const deletedProducts = await Promise.all(ids.map(id => Product.findByIdAndDelete(id)));
-        res.status(200).json({ message: `${deletedProducts.length} products deleted` });
+        const result = await Product.deleteMany({ _id: { $in: ids } });
+        res.status(200).json({ message: `${result.deletedCount} products deleted` });
+        console.log(`(200) ${result.deletedCount} products deleted`);
     } catch (error) {
         errorHandler(res, error, 'Error deleting multiple products');
     }

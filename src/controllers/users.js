@@ -98,9 +98,9 @@ const deleteMultipleUsers = async (req, res) => {
             errorHandler(res, new Error('No user IDs provided'), undefined, 400);
             return;
         }
-        const deletedUsers = await Promise.all(ids.map(id => User.findByIdAndDelete(id)));
-        res.status(200).json({ message: `${deletedUsers.length} users deleted` });
-        console.log(`(200) ${deletedUsers.length} users deleted`);
+        const result = await User.deleteMany({ _id: { $in: ids } });
+        res.status(200).json({ message: `${result.deletedCount} users deleted` });
+        console.log(`(200) ${result.deletedCount} users deleted`);
     } catch (error) {
         errorHandler(res, error, 'Error deleting multiple users');
     }
