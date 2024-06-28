@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+import generic from './generic.js';
 import Product from '../models/Product.js';
 import errorHandler from '../utils/errorHandler.js';
 
@@ -15,14 +16,10 @@ const getAllProducts = async (req, res) => {
 };
 
 const getProduct = async (req, res) => {
-    console.log('(GET) Getting product...', req.params.id);
+    const id = req.params.id;
+    console.log('(GET) Getting product...', id);
     try {
-        const id = req.params.id;
-        const product = await Product.findById(id);
-        if (!product) {
-            errorHandler(res, new Error('Product not found'), undefined, 404);
-            return;
-        }
+        const product = generic.getDocById(Product, id, res);
         res.status(200).json(product);
         console.log(`(200) Product found: ${product.name}`);
     } catch (error) {
@@ -56,19 +53,11 @@ const bulkCreateProducts = async (req, res) => {
 };
 
 const updateProduct = async (req, res) => {
-    console.log('(PUT) Updating product...', req.params.id);
+    const id = req.params.id;
+    console.log('(PUT) Updating product...', id);
     console.log(req.body)
     try {
-        const id = req.params.id;
-        if (!mongoose.isValidObjectId(id)) {
-            errorHandler(res, new Error('Invalid ObjectId'), undefined, 400);
-            return;
-        }
-        const product = await Product.findByIdAndUpdate(id, req.body, { new: true });
-        if (!product) {
-            errorHandler(res, new Error('Product not found'), undefined, 404);
-            return;
-        }
+        const product = await generic.updateDocById(Product, id, req.body, res);
         res.status(200).json(product);
         console.log(`(200) Product updated: ${product.name}`);
     } catch (error) {
@@ -80,6 +69,7 @@ const bulkUpdateProducts = async (req, res) => {
     console.log('(PUT) Updating multiple products...', req.body);
     try {
         const productsToUpdate = req.body;
+        // const updatedProducts = await Promise.all(productsToUpdate.map(product => generic.updateModelById(Product, product.id, product, res)));
         const updatedProducts = await Promise.all(productsToUpdate.map(product => Product.findByIdAndUpdate(product.id, product, { new: true })));
         res.status(200).json(updatedProducts);
         console.log(`(200) ${updatedProducts.length} products updated`);
@@ -89,20 +79,14 @@ const bulkUpdateProducts = async (req, res) => {
 };
 
 const deleteProduct = async (req, res) => {
-    console.log('(DELETE) Deleting product...', req.params.id);
+    const id = req.params.id;
+    console.log('(DELETE) Deleting product...', id);
     try {
-        const id = req.params.id;
-        if (!mongoose.isValidObjectId(id)) {
-            errorHandler(res, new Error('Invalid ObjectId'), undefined, 400);
-            return;
+        const deletedProduct = await generic.deleteDocById(Product, id, res);
+        if (deletedProduct) {
+            res.status(200).json({ message: `Product deleted: ${deletedProduct.name}` });
+            console.log(`(200) Product deleted: ${deletedProduct.name}`);
         }
-        const deletedProduct = await Product.findByIdAndDelete(id);
-        if (!deletedProduct) {
-            errorHandler(res, new Error('Product not found'), undefined, 404);
-            return;
-        }
-        res.status(200).json({ message: `Product deleted: ${deletedProduct.name}` });
-        console.log(`(200) Product deleted: ${deletedProduct.name}`);
     } catch (error) {
         errorHandler(res, error, 'Error deleting product');
     }

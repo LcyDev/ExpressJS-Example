@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+import generic from './generic.js';
 import User from '../models/User.js';
 import errorHandler from '../utils/errorHandler.js';
 
@@ -15,14 +16,10 @@ const getAllUsers = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-    console.log('(GET) Getting user...', req.params.id);
+    const id = req.params.id;
+    console.log('(GET) Getting user...', id);
     try {
-        const id = req.params.id;
-        const user = await User.findById(id);
-        if (!user) {
-            errorHandler(res, new Error('User not found'), undefined, 404);
-            return;
-        }
+        const user = generic.getDocById(User, id, res);
         res.status(200).json(user);
         console.log(`(200) User found: ${user.name}`);
     } catch (error) {
@@ -34,8 +31,8 @@ const createUser = async (req, res) => {
     console.log('(POST) Creating new user...', req.body);
     try {
         const { name, age, email } = req.body;
-        const user = new User({ name, age, email });
-        const savedUser = await user.save();
+        const newUser = new User({ name, age, email });
+        const savedUser = await newUser.save();
         res.status(201).json(savedUser);
         console.log(`(201) User created: ${savedUser.name}`);
     } catch (error) {
@@ -56,19 +53,11 @@ const bulkCreateUsers = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-    console.log('(PUT) Updating user...', req.params.id);
+    const id = req.params.id;
+    console.log('(PUT) Updating user...', id);
     console.log(req.body)
     try {
-        const id = req.params.id;
-        if (!mongoose.isValidObjectId(id)) {
-            errorHandler(res, new Error('Invalid ObjectId'), undefined, 400);
-            return;
-        }
-        const user = await User.findByIdAndUpdate(id, req.body, { new: true });
-        if (!user) {
-            errorHandler(res, new Error('User not found'), undefined, 404);
-            return;
-        }
+        const user = await generic.updateDocById(User, id, req.body, res);
         res.status(200).json(user);
         console.log(`(200) User updated: ${user.name}`);
     } catch (error) {
@@ -80,6 +69,7 @@ const bulkUpdateUsers = async (req, res) => {
     console.log('(PUT) Updating multiple users...', req.body);
     try {
         const usersToUpdate = req.body;
+        // const updatedUsers = await Promise.all(usersToUpdate.map(users => generic.updateModelById(User, user.id, user, res)));
         const updatedUsers = await Promise.all(usersToUpdate.map(user => User.findByIdAndUpdate(user.id, user, { new: true })));
         res.status(200).json(updatedUsers);
         console.log(`(200) ${updatedUsers.length} users updated`);
@@ -89,20 +79,15 @@ const bulkUpdateUsers = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-    console.log('(DELETE) Deleting user...', req.params.id);
+    const id = req.params.id;
+    console.log('(DELETE) Deleting user...', id);
     try {
-        const id = req.params.id;
-        if (!mongoose.isValidObjectId(id)) {
-            errorHandler(res, new Error('Invalid ObjectId'), undefined, 400);
-            return;
+        const deletedUser = await generic.deleteDocById(User, id, res);
+        if (deletedUser) {
+            const identifier = deletedUser.name || id;
+            res.status(200).json({ message: `User deleted: ${identifier}` });
+            console.log(`(200) User deleted: ${identifier}`);
         }
-        const deletedUser = await User.findByIdAndDelete(id);
-        if (!deletedUser) {
-            errorHandler(res, new Error('User not found'), undefined, 404);
-            return;
-        }
-        res.status(200).json({ message: 'User deleted' });
-        console.log(`(200) User deleted: ${deletedUser.name}`);
     } catch (error) {
         errorHandler(res, error, 'Error deleting user');
     }
