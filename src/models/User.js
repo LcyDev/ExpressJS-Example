@@ -1,5 +1,29 @@
+
+/**
+ * @module User
+ * @description This module contains the schema and model for a user.
+ */
+
 import mongoose, { Schema, model } from 'mongoose';
 
+/**
+ * @typedef {Object} UserSchema
+ * @property {string} name - The user's name.
+ * @property {number} age - The user's age.
+ * @property {string} email - The user's email.
+ */
+
+/**
+ * @typedef {Object} User
+ * @property {string} _id - The user's unique identifier.
+ * @property {string} name - The user's name.
+ * @property {number} age - The user's age.
+ * @property {string} email - The user's email.
+ */
+
+/**
+ * @type {UserSchema}
+ */
 const userSchema = new Schema({
     name: {
         type: String,
@@ -26,16 +50,19 @@ const userSchema = new Schema({
     },
 });
 
-userSchema.set('toJSON', {
-    virtuals: true,
 /*
+userSchema.set('toJSON', {
+    virtuals: true, // Create id field
     versionKey: false, // Prevent the _v field
     transform: (doc, ret) => {
         delete ret._id; // Delete the _id field
     },
-*/
 });
+*/
 
+/**
+ * @type {User}
+ */
 const User = model('User', userSchema);
 
 export default User;
