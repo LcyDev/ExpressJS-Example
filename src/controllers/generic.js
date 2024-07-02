@@ -1,11 +1,18 @@
 /**
+ * @module documentManager
+ * @description Module containing functions for interacting with a database using Mongoose.
+ */
+
+import mongoose, { Model, Document } from 'mongoose';
+
+/**
 * Retrieves a document from the database by its id.
 *
-* @param {Object} model - The Mongoose model to use for the query.
+* @param {Model} model - The Mongoose model to use for the query.
 * @param {String} id - The id of the document to retrieve.
-* @param {Object} res - The Express response object.
+* @param {Express.Response} res - The Express response object.
 *
-* @returns {Promise<Object|null>} - A Promise that resolves to the document if found, or null if not found or an error occurs.
+* @returns {Promise<Document|null>} - A Promise that resolves to the document if found, or null if not found or an error occurs.
 *
 * @throws {Error} - Throws an error if the provided id is not a valid Mongoose ObjectId.
 */
@@ -30,12 +37,12 @@ const getDocById = async (model, id, res) => {
 /**
 * Updates a document in the database by its id.
 *
-* @param {Object} model - The Mongoose model to use for the query.
+* @param {Model} model - The Mongoose model to use for the query.
 * @param {String} id - The id of the document to update.
 * @param {Object} data - The data to update the document with.
-* @param {Object} res - The Express response object.
+* @param {Express.Response} res - The Express response object.
 *
-* @returns {Promise<Object|null>} - A Promise that resolves to the updated document if successful, or null if not found or an error occurs.
+* @returns {Promise<Document|null>} - A Promise that resolves to the updated document if successful, or null if not found or an error occurs.
 *
 * @throws {Error} - Throws an error if the provided id is not a valid Mongoose ObjectId.
 */
@@ -60,11 +67,11 @@ const updateDocById = async (model, id, data, res) => {
 /**
 * Deletes a document from the database by its id.
 *
-* @param {Object} model - The Mongoose model to use for the query.
+* @param {Model} model - The Mongoose model to use for the query.
 * @param {String} id - The id of the document to delete.
-* @param {Object} res - The Express response object.
+* @param {Express.Response} res - The Express response object.
 *
-* @returns {Promise<Object|null>} - A Promise that resolves to the deleted document if successful, or null if not found or an error occurs.
+* @returns {Promise<Document|null>} - A Promise that resolves to the deleted document if successful, or null if not found or an error occurs.
 *
 * @throws {Error} - Throws an error if the provided id is not a valid Mongoose ObjectId.
 */
@@ -86,4 +93,13 @@ const deleteDocById = async (model, id, res) => {
     }
 };
 
-export default { getDocById, updateDocById, deleteDocById };
+/**
+ * Exports the functions for managing documents.
+ * @namespace
+ */
+const documentManager = {
+    getDocById,
+    updateDocById,
+    deleteDocById
+};
+export default documentManager;
