@@ -3,17 +3,17 @@
  * @description This module contains the schema and model for a product.
  */
 
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Model } from 'mongoose';
 
 /**
- * @typedef {Object} ProductSchema
+ * @typedef {Schema} ProductSchema
  * @property {string} name - The name of the product.
  * @property {number} price - The price of the product.
  * @property {string} description - The description of the product.
  */
 
 /**
- * @typedef {Object} Product
+ * @typedef {Model} Product
  * @property {string} _id - The unique identifier for the product.
  * @property {string} name - The name of the product.
  * @property {number} price - The price of the product.
@@ -21,9 +21,7 @@ import mongoose, { Schema } from 'mongoose';
  */
 
 /**
- * @function createProductSchema
- * @description Creates a schema for a product.
- * @returns {ProductSchema} The schema for a product.
+ * @type {ProductSchema}
  */
 const productSchema = new Schema({
     name: {
