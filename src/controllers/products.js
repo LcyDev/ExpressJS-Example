@@ -1,9 +1,15 @@
-import mongoose from 'mongoose';
-
+/**
+ * @module productManager
+ * @description Module containing functions for managing products in the database.
+ */
 import generic from './generic.js';
 import Product from '../models/Product.js';
 import errorHandler from '../utils/errorHandler.js';
 
+/**
+ * Fetch all products from the database.
+ * @returns {Promise<Product[]>} A promise that resolves to an array of Product objects.
+ */
 const getAllProducts = async (req, res) => {
     console.log('(GET) Getting all products...');
     try {
@@ -15,6 +21,11 @@ const getAllProducts = async (req, res) => {
     }
 };
 
+/**
+ * Fetch a single product by ID from the database.
+ * @param {string} id - The ID of the product to fetch.
+ * @returns {Promise<Product>} A promise that resolves to a Product object.
+ */
 const getProduct = async (req, res) => {
     const id = req.params.id;
     console.log('(GET) Getting product...', id);
@@ -27,6 +38,12 @@ const getProduct = async (req, res) => {
     }
 };
 
+/**
+ * Create a new product in the database.
+ * @param {Express.Request} req - The request object containing the product data.
+ * @param {Express.Response} res - The response object.
+ * @returns {Promise<Product>} A promise that resolves to the created Product object.
+ */
 const createProduct = async (req, res) => {
     console.log('(POST) Creating new product...', req.body);
     try {
@@ -40,6 +57,12 @@ const createProduct = async (req, res) => {
     }
 };
 
+/**
+ * Create multiple new products in the database.
+ * @param {Express.Request} req - The request object containing an array of product data.
+ * @param {Express.Response} res - The response object.
+ * @returns {Promise<Product[]>} A promise that resolves to an array of created Product objects.
+ */
 const bulkCreateProducts = async (req, res) => {
     console.log('(POST) Creating multiple products...', req.body);
     try {
@@ -52,6 +75,13 @@ const bulkCreateProducts = async (req, res) => {
     }
 };
 
+/**
+ * Update an existing product in the database.
+ * @param {string} id - The ID of the product to update.
+ * @param {Express.Request} req - The request object containing the updated product data.
+ * @param {Express.Response} res - The response object.
+ * @returns {Promise<Product>} A promise that resolves to the updated Product object.
+ */
 const updateProduct = async (req, res) => {
     const id = req.params.id;
     console.log('(PUT) Updating product...', id);
@@ -65,6 +95,13 @@ const updateProduct = async (req, res) => {
     }
 };
 
+
+/**
+ * Update multiple existing products in the database.
+ * @param {Express.Request} req - The request object containing an array of product data with IDs.
+ * @param {Express.Response} res - The response object.
+ * @returns {Promise<Product[]>} A promise that resolves to an array of updated Product objects.
+ */
 const bulkUpdateProducts = async (req, res) => {
     console.log('(PUT) Updating multiple products...', req.body);
     try {
@@ -78,6 +115,13 @@ const bulkUpdateProducts = async (req, res) => {
     }
 };
 
+/**
+ * Delete a product from the database by ID.
+ * @param {string} id - The ID of the product to delete.
+ * @param {Express.Request} req - The request object.
+ * @param {Express.Response} res - The response object.
+ * @returns {Promise<void>} A promise that resolves when the product is deleted.
+ */
 const deleteProduct = async (req, res) => {
     const id = req.params.id;
     console.log('(DELETE) Deleting product...', id);
@@ -92,6 +136,12 @@ const deleteProduct = async (req, res) => {
     }
 };
 
+/**
+ * Delete multiple products from the database by IDs.
+ * @param {Express.Request} req - The request object containing an array of product IDs.
+ * @param {Express.Response} res - The response object.
+ * @returns {Promise<void>} A promise that resolves when the products are deleted.
+ */
 const bulkDeleteProducts = async (req, res) => {
     console.log('(DELETE) Deleting multiple products...', req.body);
     try {
@@ -108,6 +158,12 @@ const bulkDeleteProducts = async (req, res) => {
     }
 };
 
+/**
+ * Delete all products from the database.
+ * @param {Express.Request} req - The request object.
+ * @param {Express.Response} res - The response object.
+ * @returns {Promise<void>} A promise that resolves when all products are deleted.
+ */
 const deleteAllProducts = async (req, res) => {
     console.log('(DELETE) Deleting multiple products...', req.body);
     try {
@@ -119,11 +175,19 @@ const deleteAllProducts = async (req, res) => {
     }
 };
 
-export default {
-    getProduct,
+/**
+ * Exports the functions for managing products.
+ * @namespace
+ */
+const productManager = {
     getAllProducts,
-    createProduct, bulkCreateProducts,
-    updateProduct, bulkUpdateProducts,
-    deleteProduct, bulkDeleteProducts,
+    getProduct,
+    createProduct,
+    bulkCreateProducts,
+    updateProduct,
+    bulkUpdateProducts,
+    deleteProduct,
+    bulkDeleteProducts,
     deleteAllProducts
 };
+export default productManager;
