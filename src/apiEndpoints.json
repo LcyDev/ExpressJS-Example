@@ -1,0 +1,96 @@
+{
+    "products": {
+        "getAllProducts": {
+            "method": "GET",
+            "path": "/products",
+            "description": "Get all products"
+        },
+        "getProduct": {
+            "method": "GET",
+            "path": "/products/:id",
+            "description": "Get an existing product"
+        },
+        "createProduct": {
+            "method": "POST",
+            "path": "/products",
+            "description": "Create a new product"
+        },
+        "bulkCreateProducts": {
+            "method": "POST",
+            "path": "/products/bulk",
+            "description": "Create multiple new products"
+        },
+        "updateProduct": {
+            "method": "PUT",
+            "path": "/products/:id",
+            "description": "Update an existing product"
+        },
+        "bulkUpdateProducts": {
+            "method": "PUT",
+            "path": "/products/bulk",
+            "description": "Update multiple existing products"
+        },
+        "deleteProduct": {
+            "method": "DELETE",
+            "path": "/products/:id",
+            "description": "Delete a product"
+        },
+        "bulkDeleteProducts": {
+            "method": "DELETE",
+            "path": "/products/bulk",
+            "description": "Delete a product"
+        },
+        "deleteAllProducts": {
+            "method": "DELETE",
+            "path": "/products",
+            "description": "Delete all products"
+        }
+    },
+    "users": {
+        "getAllUsers": {
+            "method": "GET",
+            "path": "/users",
+            "description": "Get all users"
+        },
+        "getUser": {
+            "method": "GET",
+            "path": "/users/:id",
+            "description": "Get an existing user"
+        },
+        "createUser": {
+            "method": "POST",
+            "path": "/users",
+            "description": "Create a new user"
+        },
+        "bulkCreateUsers": {
+            "method": "POST",
+            "path": "/users/bulk",
+            "description": "Create multiple new users"
+        },
+        "updateUser": {
+            "method": "PUT",
+            "path": "/users/:id",
+            "description": "Update an existing user"
+        },
+        "bulkUpdateUsers": {
+            "method": "PUT",
+            "path": "/users/bulk",
+            "description": "Update multiple existing users"
+        },
+        "deleteUser": {
+            "method": "DELETE",
+            "path": "/users/:id",
+            "description": "Delete a user"
+        },
+        "bulkDeleteUsers": {
+            "method": "DELETE",
+            "path": "/users/bulk",
+            "description": "Delete multiple users"
+        },
+        "deleteAllUsers": {
+            "method": "DELETE",
+            "path": "/users",
+            "description": "Delete all users"
+        }
+    }
+}
