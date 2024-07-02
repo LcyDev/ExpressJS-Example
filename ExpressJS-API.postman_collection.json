@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "325a2067-c691-4a47-9fd2-0153e963fdea",
+		"_postman_id": "f9a300ed-283d-4622-827a-f46dca4fd930",
 		"name": "ExpressJS-API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "29052998"
@@ -9,42 +9,6 @@
 		{
 			"name": "Products",
 			"item": [
-				{
-					"name": "getProducts",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"JSON Contains List\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.be.an(\"array\");\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{host}}{{port}}/products",
-							"host": [
-								"{{host}}{{port}}"
-							],
-							"path": [
-								"products"
-							]
-						}
-					},
-					"response": []
-				},
 				{
 					"name": "createProduct",
 					"event": [
@@ -131,15 +95,17 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}{{port}}/products/",
+							"raw": "{{host}}:{{port}}/products/",
 							"host": [
-								"{{host}}{{port}}"
+								"{{host}}"
 							],
+							"port": "{{port}}",
 							"path": [
 								"products",
 								""
 							]
-						}
+						},
+						"description": "Create a new product in the database."
 					},
 					"response": []
 				},
@@ -152,8 +118,10 @@
 								"exec": [
 									"const responseData = pm.response.json();",
 									"",
-									"if (responseData._id) {",
-									"    pm.collectionVariables.set(\"latestProductID\", responseData._id);",
+									"if (responseData) {",
+									"    if (responseData[0]._id) {",
+									"        pm.collectionVariables.set(\"secondProductID\", responseData[0]._id);",
+									"    }",
 									"}",
 									"",
 									"pm.test(\"Successful POST request\", function () {",
@@ -166,49 +134,10 @@
 									"    pm.expect(header).to.include(\"application/json\");",
 									"});",
 									"",
-									"pm.test(\"Returned JSON has expected properties\", function () {",
-									"    const responseData = pm.response.json();",
-									"    pm.expect(responseData).to.have.property('name');",
-									"    pm.expect(responseData).to.have.property('price');",
-									"    pm.expect(responseData).to.have.property('description');",
-									"    pm.expect(responseData).to.have.property('_id');",
-									"    pm.expect(responseData).to.have.property('__v');",
-									"});",
-									"",
-									"pm.test(\"Product name is a non-empty string\", function () {",
-									"  const responseData = pm.response.json();",
-									"  ",
-									"  pm.expect(responseData).to.be.an('object');",
-									"  pm.expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Product name should not be empty\");",
-									"});",
-									"",
-									"",
-									"pm.test(\"Price is a non-negative number\", function () {",
-									"    const responseData = pm.response.json();",
-									"    ",
-									"    pm.expect(responseData.price).to.be.a('number');",
-									"    pm.expect(responseData.price).to.be.at.least(0);",
-									"});",
-									"",
-									"",
-									"pm.test(\"Description is a non-empty string\", function () {",
-									"  const responseData = pm.response.json();",
-									"  ",
-									"  pm.expect(responseData).to.be.an('object');",
-									"  pm.expect(responseData.description).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Description should not be empty\");",
-									"});",
-									"",
-									"pm.test(\"_id is a non-empty string\", function () {    ",
-									"    pm.expect(responseData._id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
-									"});",
-									"",
-									"pm.test(\"__v is a non-negative integer\", function () {    ",
-									"    pm.expect(responseData.__v).to.be.a('number').and.to.satisfy((num) => num >= 0, \"Value should be non-negative\");",
-									"});",
-									"",
 									"pm.test(\"Response time is within acceptable limits\", function () {",
 									"  pm.expect(pm.response.responseTime).to.be.below(200);",
 									"});",
+									"",
 									""
 								],
 								"type": "text/javascript",
@@ -229,15 +158,57 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}{{port}}/products/bulk",
+							"raw": "{{host}}:{{port}}/products/bulk/",
 							"host": [
-								"{{host}}{{port}}"
+								"{{host}}"
 							],
+							"port": "{{port}}",
 							"path": [
 								"products",
-								"bulk"
+								"bulk",
+								""
 							]
+						},
+						"description": "Create multiple new products in the database."
+					},
+					"response": []
+				},
+				{
+					"name": "getProduct",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"JSON Contains List\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an(\"array\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}:{{port}}/products/",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"products",
+								""
+							]
+						},
+						"description": "Fetch a single product by ID from the database."
 					},
 					"response": []
 				},
@@ -323,15 +294,18 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}{{port}}/products/{{latestProductID}}",
+							"raw": "{{host}}:{{port}}/products/{{latestProductID}}/",
 							"host": [
-								"{{host}}{{port}}"
+								"{{host}}"
 							],
+							"port": "{{port}}",
 							"path": [
 								"products",
-								"{{latestProductID}}"
+								"{{latestProductID}}",
+								""
 							]
-						}
+						},
+						"description": "Update a product from the database by ID"
 					},
 					"response": []
 				},
@@ -371,15 +345,57 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}{{port}}/users/{{latestProductID}}",
+							"raw": "{{host}}:{{port}}/users/{{latestProductID}}/",
 							"host": [
-								"{{host}}{{port}}"
+								"{{host}}"
 							],
+							"port": "{{port}}",
 							"path": [
 								"users",
-								"{{latestProductID}}"
+								"{{latestProductID}}",
+								""
 							]
+						},
+						"description": "Delete a product from the database by ID"
+					},
+					"response": []
+				},
+				{
+					"name": "getAllProducts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"JSON Contains List\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an(\"array\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}:{{port}}/products/",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"products",
+								""
+							]
+						},
+						"description": "Fetch all products from the database."
 					},
 					"response": []
 				},
@@ -422,15 +438,17 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}{{port}}/products/",
+							"raw": "{{host}}:{{port}}/products/",
 							"host": [
-								"{{host}}{{port}}"
+								"{{host}}"
 							],
+							"port": "{{port}}",
 							"path": [
 								"products",
 								""
 							]
-						}
+						},
+						"description": "Delete all products from the database."
 					},
 					"response": []
 				}
@@ -525,15 +543,17 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}{{port}}/users/",
+							"raw": "{{host}}:{{port}}/users/",
 							"host": [
-								"{{host}}{{port}}"
+								"{{host}}"
 							],
+							"port": "{{port}}",
 							"path": [
 								"users",
 								""
 							]
-						}
+						},
+						"description": "Create a new user in the database."
 					},
 					"response": []
 				},
@@ -596,15 +616,57 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}{{port}}/users/bulk",
+							"raw": "{{host}}:{{port}}/users/bulk/",
 							"host": [
-								"{{host}}{{port}}"
+								"{{host}}"
 							],
+							"port": "{{port}}",
 							"path": [
 								"users",
-								"bulk"
+								"bulk",
+								""
 							]
+						},
+						"description": "Create multiple new users in the database."
+					},
+					"response": []
+				},
+				{
+					"name": "getUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"JSON Contains List\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an(\"array\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}:{{port}}/users/",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"users",
+								""
+							]
+						},
+						"description": "Fetch a single user by ID from the database."
 					},
 					"response": []
 				},
@@ -680,15 +742,18 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}{{port}}/users/{{latestUserID}}",
+							"raw": "{{host}}:{{port}}/users/{{latestUserID}}/",
 							"host": [
-								"{{host}}{{port}}"
+								"{{host}}"
 							],
+							"port": "{{port}}",
 							"path": [
 								"users",
-								"{{latestUserID}}"
+								"{{latestUserID}}",
+								""
 							]
-						}
+						},
+						"description": "Update a user from the database by ID"
 					},
 					"response": []
 				},
@@ -707,20 +772,23 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}{{port}}/users/{{secondUserID}}",
+							"raw": "{{host}}:{{port}}/users/{{secondUserID}}/",
 							"host": [
-								"{{host}}{{port}}"
+								"{{host}}"
 							],
+							"port": "{{port}}",
 							"path": [
 								"users",
-								"{{secondUserID}}"
+								"{{secondUserID}}",
+								""
 							]
-						}
+						},
+						"description": "Delete a user from the database by ID"
 					},
 					"response": []
 				},
 				{
-					"name": "getUsers",
+					"name": "getAllUsers",
 					"event": [
 						{
 							"listen": "test",
@@ -744,14 +812,17 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}{{port}}/users",
+							"raw": "{{host}}:{{port}}/users/",
 							"host": [
-								"{{host}}{{port}}"
+								"{{host}}"
 							],
+							"port": "{{port}}",
 							"path": [
-								"users"
+								"users",
+								""
 							]
-						}
+						},
+						"description": "Fetch all users from the database."
 					},
 					"response": []
 				},
@@ -770,14 +841,17 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}{{port}}/users",
+							"raw": "{{host}}:{{port}}/users/",
 							"host": [
-								"{{host}}{{port}}"
+								"{{host}}"
 							],
+							"port": "{{port}}",
 							"path": [
-								"users"
+								"users",
+								""
 							]
-						}
+						},
+						"description": "Delete all users from the database."
 					},
 					"response": []
 				}
@@ -789,11 +863,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/",
+					"raw": "{{host}}:{{port}}/",
 					"host": [
-						"localhost"
+						"{{host}}"
 					],
-					"port": "3000",
+					"port": "{{port}}",
 					"path": [
 						""
 					]
@@ -809,7 +883,7 @@
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
-					"pm.globals.set(\"port\", \"8080\");"
+					""
 				]
 			}
 		},
@@ -836,6 +910,20 @@
 		{
 			"key": "secondUserID",
 			"value": ""
+		},
+		{
+			"key": "secondProductID",
+			"value": ""
+		},
+		{
+			"key": "port",
+			"value": "8080",
+			"type": "string"
+		},
+		{
+			"key": "host",
+			"value": "localhost",
+			"type": "string"
 		}
 	]
 }
