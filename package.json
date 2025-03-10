@@ -1,6 +1,6 @@
 {
   "author": "Lwcl_",
-  "name": "ExpressJS-API",
+  "name": "expressjs-api",
   "version": "1.0.0",
   "description": "API Server built with ExpressJS and MongoDB",
   "main": "src/server.js",
