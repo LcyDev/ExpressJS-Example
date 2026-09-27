@@ -1,15 +1,58 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+
   "extends": [
-    "config:recommended"
+    "config:recommended",
+    ":automergeRequireAllStatusChecks",
+    "security:minimumReleaseAgeNpm"
   ],
+
+  "dependencyDashboard": true,
+
   "packageRules": [
     {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "description": "Automerge stable patch updates",
+      "matchUpdateTypes": ["patch"],
+      "matchCurrentVersion": "!/^0/",
       "automerge": true
     },
     {
+      "description": "Automerge stable minor updates",
+      "matchUpdateTypes": ["minor"],
+      "matchCurrentVersion": "!/^0/",
+      "automerge": true
+    },
+    {
+      "description": "Never automerge major updates",
+      "matchUpdateTypes": ["major"],
+      "automerge": false
+    },
+    {
+      "description": "Never automerge pre-1.0 packages",
+      "matchCurrentVersion": "/^0/",
+      "automerge": false
+    },
+    {
+      "description": "Development tooling",
       "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "matchCurrentVersion": "!/^0/",
+      "automerge": true
+    },
+    {
+      "description": "Automerge JavaScript/TypeScript development tooling",
+      "matchPackageNames": [
+        "typescript",
+        "eslint",
+        "prettier",
+        "vitest",
+        "jest",
+        "/^@types\\/.+$/"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
       "automerge": true
     }
   ]
