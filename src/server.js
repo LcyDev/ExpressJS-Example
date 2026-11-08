@@ -44,43 +44,43 @@ const apiEndpoints = {
         },
         getProduct: {
             method: 'GET',
-            path: '/products/:id',
+            path: '/products/id/:id',
             description: 'Get an existing product',
+        },
+        bulkCreateProducts: {
+            method: 'POST',
+            path: '/products/bulk-create',
+            description: 'Create multiple new products',
         },
         createProduct: {
             method: 'POST',
             path: '/products',
             description: 'Create a new product',
         },
-        bulkCreateProducts: {
-            method: 'POST',
-            path: '/products/bulk',
-            description: 'Create multiple new products',
+        bulkUpdateProducts: {
+            method: 'PUT',
+            path: '/products/bulk-update',
+            description: 'Update multiple existing products',
         },
         updateProduct: {
             method: 'PUT',
-            path: '/products/:id',
+            path: '/products/id/:id',
             description: 'Update an existing product',
-        },
-        bulkUpdateProducts: {
-            method: 'PUT',
-            path: '/products/bulk',
-            description: 'Update multiple existing products',
-        },
-        deleteProduct: {
-            method: 'DELETE',
-            path: '/products/:id',
-            description: 'Delete a product',
-        },
-        bulkDeleteProducts: {
-            method: 'DELETE',
-            path: '/products/bulk',
-            description: 'Delete a product',
         },
         deleteAllProducts: {
             method: 'DELETE',
-            path: '/products',
+            path: '/products-all',
             description: 'Delete all products',
+        },
+        bulkDeleteProducts: {
+            method: 'DELETE',
+            path: '/products/bulk-delete',
+            description: 'Delete a product',
+        },
+        deleteProduct: {
+            method: 'DELETE',
+            path: '/products/id/:id',
+            description: 'Delete a product',
         },
     },
     users: {
@@ -91,43 +91,43 @@ const apiEndpoints = {
         },
         getUser: {
             method: 'GET',
-            path: '/users/:id',
+            path: '/users/id/:id',
             description: 'Get an existing user',
+        },
+        bulkCreateUsers: {
+            method: 'POST',
+            path: '/users/bulk-create',
+            description: 'Create multiple new users',
         },
         createUser: {
             method: 'POST',
             path: '/users',
             description: 'Create a new user',
         },
-        bulkCreateUsers: {
-            method: 'POST',
-            path: '/users/bulk',
-            description: 'Create multiple new users',
+        bulkUpdateUsers: {
+            method: 'PUT',
+            path: '/users/bulk-update',
+            description: 'Update multiple existing users',
         },
         updateUser: {
             method: 'PUT',
-            path: '/users/:id',
+            path: '/users/id/:id',
             description: 'Update an existing user',
         },
-        bulkUpdateUsers: {
-            method: 'PUT',
-            path: '/users/bulk',
-            description: 'Update multiple existing users',
-        },
-        deleteUser: {
+        deleteAllUsers: {
             method: 'DELETE',
-            path: '/users/:id',
-            description: 'Delete a user',
+            path: '/users-all',
+            description: 'Delete all users',
         },
         bulkDeleteUsers: {
             method: 'DELETE',
             path: '/users/bulk',
             description: 'Delete multiple users',
         },
-        deleteAllUsers: {
+        deleteUser: {
             method: 'DELETE',
-            path: '/users',
-            description: 'Delete all users',
+            path: '/users/id/:id',
+            description: 'Delete a user',
         },
     },
 };
@@ -168,3 +168,5 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
     logger.info(`Express Server started and listening in port {${PORT}}`);
 });
+
+export default app;
