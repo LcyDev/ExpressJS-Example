@@ -233,6 +233,10 @@ const bulkDeleteProducts = async (req, res) => {
         console.log(`(200) ${result.deletedCount} products deleted`);
         return res.status(200).json({ message: `${result.deletedCount} products deleted` });
     } catch (error) {
+        if (error.name === 'CastError' && error.kind === 'ObjectId') {
+            errorHandler(res, new Error('One or more provided IDs are invalid Mongoose ObjectIds'), null, 400);
+            return;
+        }
         errorHandler(res, error, 'Error deleting multiple products');
     }
 };
