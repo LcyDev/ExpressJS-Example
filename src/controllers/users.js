@@ -106,7 +106,7 @@ const bulkUpdateUsers = async (req, res) => {
     try {
         const usersToUpdate = req.body;
         //const updatedUsers = await Promise.all(usersToUpdate.map(users => generic.updateDocById(User, user.id, user, res)));
-        const updatedUsers = await Promise.all(usersToUpdate.map(user => User.findByIdAndUpdate(user.id, user, { new: true })));
+        const updatedUsers = await Promise.all(usersToUpdate.map(user => User.findByIdAndUpdate(user.id, user, { returnDocument: 'after' })));
         res.status(200).json(updatedUsers);
         console.log(`(200) ${updatedUsers.length} users updated`);
     } catch (error) {
@@ -147,7 +147,7 @@ const bulkDeleteUsers = async (req, res) => {
     try {
         const ids = req.body;
         if (!ids || !ids.length) {
-            errorHandler(res, new Error('No user IDs provided'), undefined, 400);
+            errorHandler(res, new Error('No user IDs provided'), null, 400);
             return;
         }
         const result = await User.deleteMany({ _id: { $in: ids } });
