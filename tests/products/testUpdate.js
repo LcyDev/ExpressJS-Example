@@ -1,42 +1,61 @@
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const server = require('../server');
-const faker = require('faker');
+import { describe, it, beforeEach, afterEach } from 'node:test';
+import assert from 'node:assert';
+import Product from '../../src/models/Product.js';
+import server from '../../src/server.js';
+import { faker } from '@faker-js/faker';
+import supertest from 'supertest';
 
-describe('Update Product', () => {
-    let productId;
-    let updatedProduct;
+describe('Update Product Tests', () => {
+    let sampleId;
+    let fakeId;
+    let updatedData;
 
-    before(async () => {
-        const newProduct = {
+    beforeEach(async () => {
+        // Create a fresh product before each test
+        const newProduct = new Product({
             name: faker.commerce.productName(),
-            price: faker.commerce.price(),
+            price: Number(faker.commerce.price()),
             description: faker.lorem.sentence()
-        };
+        });
 
-        const res = await chai.request(server).post('/products').send(newProduct);
-        chai.expect(res).to.have.status(201);
-        chai.expect(res.body).to.be.a('object');
-        productId = res.body._id;
+        const saved = await newProduct.save();
+        sampleId = saved._id.toString();
 
-        updatedProduct = {
+        // Generate a valid Mongoose ID that is NOT saved in the database for the 404 test
+        fakeId = new Product()._id.toString();
+
+        // Data to apply during updates
+        updatedData = {
             name: faker.commerce.productName(),
-            price: faker.commerce.price(),
+            price: Number(faker.commerce.price()),
             description: faker.lorem.sentence()
         };
     });
 
-    it('should update an existing product and return it', async () => {
-        const res = await chai.request(server).put(`/products/${productId}`).send(updatedProduct);
-        chai.expect(res).to.have.status(200);
-        chai.expect(res.body).to.be.a('object');
-        chai.expect(res.body.name).to.equal(updatedProduct.name);
-        chai.expect(res.body.price).to.equal(updatedProduct.price);
-        chai.expect(res.body.description).to.equal(updatedProduct.description);
+    afterEach(async () => {
+        // Clean up ONLY the specific document we created for this test
+        if (sampleId) {
+            await Product.findByIdAndDelete(sampleId);
+        }
     });
 
-    after(async () => {
-        await chai.request(server).delete(`/products/${productId}`);
+    it('should update an existing product and return it (200)', async () => {
+        const res = await supertest(server)
+            .put(`/products/id/${sampleId}`)
+            .send(updatedData);
+
+        assert.strictEqual(res.status, 200);
+        assert.strictEqual(typeof res.body, 'object');
+        assert.strictEqual(res.body.name, updatedData.name);
+        assert.strictEqual(res.body.price, updatedData.price);
+        assert.strictEqual(res.body.description, updatedData.description);
+    });
+
+    it('should return 404 when trying to update a product that does not exist', async () => {
+        const res = await supertest(server)
+            .put(`/products/id/${fakeId}`)
+            .send(updatedData);
+
+        assert.strictEqual(res.status, 404);
     });
 });
-

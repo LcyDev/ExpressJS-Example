@@ -1,69 +1,57 @@
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const app = require('../app');
-const { deleteProduct } = require('../src/productManager');
+import { describe, it, beforeEach, afterEach } from 'node:test';
+import assert from 'node:assert';
+import Product from '../../src/models/Product.js';
+import server from '../../src/server.js';
+import { faker } from '@faker-js/faker';
+import supertest from 'supertest';
 
-chai.should();
-chaiHttp.use(chai);
+describe('Delete Product Tests', () => {
+    let sampleId;
+    let fakeId;
+    let sampleProductName;
 
-describe('deleteProduct InvalidID', () => {
-    it('should return 400 when request or response object is invalid', (done) => {
-        const invalidReq = {};
-        const invalidRes = {};
+    beforeEach(async () => {
+        sampleProductName = faker.commerce.productName();
 
-        deleteProduct(invalidReq, invalidRes)
-            .then(() => {
-                done(new Error('Expected 400 status code'));
-            })
-            .catch((err) => {
-                err.response.should.have.status(400);
-                done();
-            });
-    });
-});
+        // Create a fresh product before each test
+        const newProduct = new Product({
+            name: sampleProductName,
+            price: Number(faker.commerce.price()),
+            description: faker.lorem.sentence()
+        });
 
-describe('deleteProduct ValidID', () => {
-    it('should return 200 when request and response objects are valid', (done) => {
-        const validReq = { params: { id: '5e8365757637456ab7a64264561770786c736c61732431' } };
-        const validRes = {};
+        const saved = await newProduct.save();
+        sampleId = saved._id.toString();
 
-        deleteProduct(validReq, validRes)
-            .then((res) => {
-                res.should.have.status(200);
-                done();
-            })
-            .catch((err) => {
-                done(new Error('Expected 200 status code'));
-            });
-    });
-});
-
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const server = require('../server');
-const should = chai.should();
-
-describe('deleteProduct', () => {
-    beforeEach((done) => {
-        // Create a product before each test
-        const product = new Product({ name: 'Test Product', price: 10, description: 'This is a test product' });
-        product.save().then(() => done());
+        // Generate a valid Mongoose ID format that does not exist in the database
+        fakeId = new Product()._id.toString();
     });
 
-    it('should delete a product from the database by ID and return a message confirming the deletion', (done) => {
-        chai.request(server)
-            .delete('/products/5e848c0725daf3fb6d2226daf3fb6d22') // Replace with the actual ID of the created product
-            .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.be.a('object');
-                res.body.should.have.property('message');
-                res.body.message.should.equal('Product deleted: Test Product');
-                done();
-            });
+    afterEach(async () => {
+        // Clean up ONLY the specific document created for the test, avoiding global wipes
+        if (sampleId) {
+            await Product.findByIdAndDelete(sampleId);
+        }
     });
 
-    afterEach((done) => {
-        // Clean up after each test
-        Product.deleteMany({}).then(() => done());
+    it('should delete an existing product by ID and return confirmation (200)', async () => {
+        const res = await supertest(server).delete(`/products/id/${sampleId}`);
+
+        assert.strictEqual(res.status, 200);
+        assert.strictEqual(typeof res.body, 'object');
+        assert.ok(res.body.message);
+        assert.strictEqual(res.body.message, `Product deleted: ${sampleProductName}`);
+    });
+
+    it('should return 404 when trying to delete a product that does not exist', async () => {
+        const res = await supertest(server).delete(`/products/id/${fakeId}`);
+
+        assert.strictEqual(res.status, 404);
+    });
+
+    it('should return 400 when an invalid Mongoose ObjectId is provided', async () => {
+        const res = await supertest(server).delete('/products/id/invalid-id-format-123');
+
+        assert.strictEqual(res.status, 400);
     });
 });
