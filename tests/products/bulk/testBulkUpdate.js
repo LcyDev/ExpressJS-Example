@@ -1,70 +1,64 @@
-const productManager = require('./productManager');
-const sinon = require('sinon');
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const app = require('../app');
-const faker = require('faker');
+import { describe, it, beforeEach, afterEach } from 'node:test';
+import assert from 'node:assert';
+import Product from '../../../src/models/Product.js';
+import server from '../../../src/server.js';
+import { faker } from '@faker-js/faker';
+import supertest from 'supertest';
 
-chai.use(chaiHttp);
-const { expect } = chai;
+describe('Products API - Bulk Update Tests', () => {
+    let sampleProducts = [];
 
-describe('Bulk Update Products', () => {
-  let sandbox;
+    beforeEach(async () => {
+        await Product.deleteMany({});
 
-  beforeEach(() => {
-    sandbox = sinon.createSandbox();
-  });
+        // Seed test products in the database
+        sampleProducts = await Product.create([
+            { name: faker.commerce.productName(), price: 10, description: faker.lorem.sentence() },
+            { name: faker.commerce.productName(), price: 20, description: faker.lorem.sentence() }
+        ]);
+    });
 
-  afterEach(() => {
-    sandbox.restore();
-  });
+    afterEach(async () => {
+        await Product.deleteMany({});
+    });
 
-  it('should update multiple products', async () => {
-    const updatedProducts = [
-      { _id: faker.datatype.uuid(), name: 'Product 1', price: 10, description: 'Description 1' },
-      { _id: faker.datatype.uuid(), name: 'Product 2', price: 20, description: 'Description 2' }
-    ];
+    it('should update multiple products and return a 200 status', async () => {
+        // Construct update map payload: { [id]: { fieldsToUpdate } }
+        const updatesMap = {
+            [sampleProducts[0]._id.toString()]: { name: 'Updated Product 1', price: 15 },
+            [sampleProducts[1]._id.toString()]: { name: 'Updated Product 2', price: 25 }
+        };
 
-    sandbox.stub(Product, 'findByIdAndUpdate').resolves(updatedProducts);
+        const res = await supertest(server)
+            .put('/products/bulk-update')
+            .send(updatesMap);
 
-    const res = await chai.request(app).put('/products/bulk-update').send(updatedProducts);
+        assert.strictEqual(res.status, 200);
+        assert.strictEqual(typeof res.body, 'object');
+        assert.ok(res.body.updatedProducts);
+        assert.strictEqual(res.body.updatedProducts.length, 2);
+    });
 
-    expect(res).to.have.status(200);
-    expect(res.body).to.deep.equal(updatedProducts);
-  });
+    it('should return a 400 error when an invalid payload format or empty update map is provided', async () => {
+        const res = await supertest(server)
+            .put('/products/bulk-update')
+            .send({}); // Empty object / invalid map format
 
-  it('should return error when no product IDs provided', async () => {
-    const res = await chai.request(app).put('/products/bulk-update').send([]);
+        assert.strictEqual(res.status, 400);
+    });
 
-    expect(res).to.have.status(400);
-    expect(res.body).to.have.property('message', 'No product IDs provided');
-  });
+    it('should handle non-existing product IDs gracefully and list them in notFoundIds', async () => {
+        const fakeId = new Product()._id.toString(); // Generate a valid Mongoose-style ID that doesn't exist in DB
+        const updatesMap = {
+            [fakeId]: { name: 'Ghost Product', price: 99 }
+        };
 
-  it('should update all fields of a product', async () => {
-    const updatedProduct = {
-      _id: faker.datatype.uuid(),
-      name: 'Updated Product',
-      price: 30,
-      description: 'Updated Description'
-    };
+        const res = await supertest(server)
+            .put('/products/bulk-update')
+            .send(updatesMap);
 
-    sandbox.stub(Product, 'findByIdAndUpdate').resolves([updatedProduct]);
-
-    const res = await chai.request(app).put('/products/bulk-update').send([updatedProduct]);
-
-    expect(res).to.have.status(200);
-    expect(res.body).to.deep.equal([updatedProduct]);
-  });
-
-  it('should return error when updating a non-existing product', async () => {
-    const nonExistingId = faker.datatype.uuid();
-    const updatedProduct = { _id: nonExistingId, name: 'Updated Product', price: 30, description: 'Updated Description' };
-
-    sandbox.stub(Product, 'findByIdAndUpdate').rejects(new Error('Product not found'));
-
-    const res = await chai.request(app).put('/products/bulk-update').send([updatedProduct]);
-
-    expect(res).to.have.status(404);
-    expect(res.body).to.have.property('message', 'Product not found');
-  });
+        assert.strictEqual(res.status, 200);
+        assert.strictEqual(res.body.notFoundIds.length, 1);
+        assert.strictEqual(res.body.notFoundIds[0], fakeId);
+    });
 });

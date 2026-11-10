@@ -1,90 +1,53 @@
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const app = require('../app');
-const faker = require('faker');
+import { describe, it, beforeEach, afterEach } from 'node:test';
+import assert from 'node:assert';
+import Product from '../../../src/models/Product.js';
+import server from '../../../src/server.js';
+import { faker } from '@faker-js/faker';
+import supertest from 'supertest';
 
-chai.should();
-chaiHttp.use(chai);
+describe('Products API - Bulk Delete Tests', () => {
+    let sampleProducts = [];
 
-describe('Bulk Delete Products', () => {
-    let server;
+    beforeEach(async () => {
+        await Product.deleteMany({});
 
-    before(async () => {
-        server = app.listen(3000);
+        // Seed test products in the database for valid deletion cases
+        sampleProducts = await Product.create([
+            { name: faker.commerce.productName(), price: 10, description: faker.lorem.sentence() },
+            { name: faker.commerce.productName(), price: 20, description: faker.lorem.sentence() }
+        ]);
     });
 
-    after(async () => {
-        server.close();
+    afterEach(async () => {
+        await Product.deleteMany({});
     });
 
-    it('should return an error message when no product IDs are provided', (done) => {
-        const productIds = [];
-        chai.request(server)
-        .delete('/products/bulk-delete')
-        .send({ productIds })
-        .end((err, res) => {
-            res.should.have.status(400);
-            res.body.should.be.a('object');
-            res.body.should.have.property('message').eql('No product IDs provided');
-            done();
-        });
+    it('should return a 400 status when no product IDs or an empty array are provided', async () => {
+        const res = await supertest(server)
+            .delete('/products/bulk-delete')
+            .send({ productIds: [] });
+
+        assert.strictEqual(res.status, 400);
     });
 
-    it('should return an error message when an error occurs during the deletion process', (done) => {
-        const productIds = [faker.datatype.uuid()];
-        const error = new Error('Simulated error during deletion');
-        sinon.stub(Product, 'deleteMany').resolves({ deletedCount: 0 });
-        sinon.stub(Product, 'deleteMany').throws(error);
+    it('should successfully delete multiple products and return a 200 status when valid IDs are provided', async () => {
+        const idsToDelete = sampleProducts.map(p => p._id.toString());
 
-        chai.request(server)
-        .delete('/products/bulk-delete')
-        .send({ productIds })
-        .end((err, res) => {
-            res.should.have.status(500);
-            res.body.should.be.a('object');
-            res.body.should.have.property('message').eql('Error deleting multiple products');
-            done();
-        });
+        const res = await supertest(server)
+            .delete('/products/bulk-delete')
+            .send({ productIds: idsToDelete });
 
-        Product.deleteMany.restore();
-    });
-});
+        assert.strictEqual(res.status, 200);
 
-
-const productManager = require('./productManager');
-const sinon = require('sinon');
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const app = require('../app');
-const { expect } = chai;
-
-chai.use(chaiHttp);
-
-describe('Bulk Delete Products', () => {
-    let req, res, next;
-
-    beforeEach(() => {
-        res = {
-            status: sinon.spy(res, 'status'),
-            json: sinon.spy(res, 'json'),
-            send: sinon.spy(res, 'send')
-        };
-        next = sinon.spy();
+        const remainingCount = await Product.countDocuments({ _id: { $in: idsToDelete } });
+        assert.strictEqual(remainingCount, 0);
     });
 
-    afterEach(() => {
-        sinon.restore();
-    });
+    it('should return 400 when invalid non-string or malformed IDs are provided', async () => {
+        const res = await supertest(server)
+            .delete('/products/bulk-delete')
+            .send({ productIds: [123, 456] }); // Invalid types
 
-    it('should return an error message when provided an array of non-string product IDs', async () => {
-        req = {
-            body: { ids: [1, 2, 3] }
-        };
-
-        await productManager.bulkDeleteProducts(req, res, next);
-
-        expect(res.status.calledOnceWith(400)).to.be.true;
-        expect(res.json.calledOnceWith({ message: 'No product IDs provided' })).to.be.true;
-        expect(next.called).to.be.false;
+        assert.strictEqual(res.status, 400);
     });
 });

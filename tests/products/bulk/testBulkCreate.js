@@ -1,68 +1,45 @@
-const productManager = require('./productManager');
-const sinon = require('sinon');
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const app = require('../app');
-const faker = require('faker');
+import { describe, it, beforeEach, afterEach } from 'node:test';
+import assert from 'node:assert';
+import Product from '../../../src/models/Product.js';
+import server from '../../../src/server.js';
+import { faker } from '@faker-js/faker';
+import supertest from 'supertest';
 
-chai.should();
-chai.use(chaiHttp);
+describe('Products API - Bulk Create Tests', () => {
+    // Keep track of any IDs created during tests so we can clean them up targetedly
+    let createdIds = [];
 
-describe('Product Manager', () => {
-  describe('bulkCreateProducts', () => {
-    let req, res, next;
-
-    beforeEach(() => {
-      res = {
-        status: sinon.spy(res, 'status'),
-        json: sinon.spy(res, 'json'),
-        send: sinon.spy(res, 'send')
-      };
-      next = sinon.spy();
-      req = {
-        body: []
-      };
+    beforeEach(async () => {
+        await Product.deleteMany({});
+        createdIds = [];
     });
 
-    afterEach(() => {
-      sinon.restore();
-    });
-
-    it('should create multiple new Product objects and return them', async () => {
-      const productsToCreate = Array.from({ length: 3 }, () => ({
-        name: faker.commerce.productName(),
-        price: faker.commerce.price(),
-        description: faker.lorem.sentence()
-      }));
-
-      const createdProducts = [
-        {
-          _id: '5f4e1d4b374b2b2b393d1234',
-          name: 'Product 1',
-          price: 99.99,
-          description: 'Description 1'
-        },
-        {
-          _id: '5f4e1d4b374b2b2b393d1235',
-          name: 'Product 2',
-          price: 199.99,
-          description: 'Description 2'
-        },
-        {
-          _id: '5f4e1d4b374b2b2b393d1236',
-          name: 'Product 3',
-          price: 299.99,
-          description: 'Description 3'
+    afterEach(async () => {
+        if (createdIds.length > 0) {
+            await Product.deleteMany({ _id: { $in: createdIds } });
         }
-      ];
-
-      sinon.stub(Product, 'create').resolves(createdProducts);
-
-      await productManager.bulkCreateProducts(req, res, next);
-
-      res.status.calledWith(201).should.be.true;
-      res.json.calledWith(createdProducts).should.be.true;
-      res.send.notCalled.should.be.true;
     });
-  });
+
+    it('should create multiple new Product objects and return them (201)', async () => {
+        const productsToCreate = Array.from({ length: 3 }, () => ({
+            name: faker.commerce.productName(),
+            price: Number(faker.commerce.price()),
+            description: faker.lorem.sentence()
+        }));
+
+        const res = await supertest(server)
+            .post('/products/bulk-create') // Adjust your route path if necessary (e.g. /products/bulk or /api/products/bulk)
+            .send(productsToCreate);
+
+        assert.strictEqual(res.status, 201);
+        assert.strictEqual(Array.isArray(res.body), true);
+        assert.strictEqual(res.body.length, 3);
+
+        // Collect generated IDs for targeted cleanup
+        createdIds = res.body.map(p => p._id);
+
+        // Verify content fields match
+        assert.strictEqual(res.body[0].name, productsToCreate[0].name);
+        assert.strictEqual(res.body[1].price, productsToCreate[1].price);
+    });
 });
