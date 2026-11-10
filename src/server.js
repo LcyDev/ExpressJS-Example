@@ -47,40 +47,40 @@ const apiEndpoints = {
             path: '/products/id/:id',
             description: 'Get an existing product',
         },
-        bulkCreateProducts: {
-            method: 'POST',
-            path: '/products/bulk-create',
-            description: 'Create multiple new products',
-        },
         createProduct: {
             method: 'POST',
             path: '/products',
             description: 'Create a new product',
         },
-        bulkUpdateProducts: {
-            method: 'PUT',
-            path: '/products/bulk-update',
-            description: 'Update multiple existing products',
+        bulkCreateProducts: {
+            method: 'POST',
+            path: '/products/bulk-create',
+            description: 'Create multiple new products',
         },
         updateProduct: {
             method: 'PUT',
             path: '/products/id/:id',
             description: 'Update an existing product',
         },
-        deleteAllProducts: {
+        bulkUpdateProducts: {
+            method: 'PUT',
+            path: '/products/bulk-update',
+            description: 'Update multiple existing products',
+        },
+        deleteProduct: {
             method: 'DELETE',
-            path: '/products-all',
-            description: 'Delete all products',
+            path: '/products/id/:id',
+            description: 'Delete a product',
         },
         bulkDeleteProducts: {
             method: 'DELETE',
             path: '/products/bulk-delete',
             description: 'Delete a product',
         },
-        deleteProduct: {
+        deleteAllProducts: {
             method: 'DELETE',
-            path: '/products/id/:id',
-            description: 'Delete a product',
+            path: '/products-all',
+            description: 'Delete all products',
         },
     },
     users: {
@@ -104,30 +104,30 @@ const apiEndpoints = {
             path: '/users',
             description: 'Create a new user',
         },
-        bulkUpdateUsers: {
-            method: 'PUT',
-            path: '/users/bulk-update',
-            description: 'Update multiple existing users',
-        },
         updateUser: {
             method: 'PUT',
             path: '/users/id/:id',
             description: 'Update an existing user',
         },
-        deleteAllUsers: {
+        bulkUpdateUsers: {
+            method: 'PUT',
+            path: '/users/bulk-update',
+            description: 'Update multiple existing users',
+        },
+        deleteUser: {
             method: 'DELETE',
-            path: '/users-all',
-            description: 'Delete all users',
+            path: '/users/id/:id',
+            description: 'Delete a user',
         },
         bulkDeleteUsers: {
             method: 'DELETE',
             path: '/users/bulk',
             description: 'Delete multiple users',
         },
-        deleteUser: {
-            method: 'DELETE',
-            path: '/users/id/:id',
-            description: 'Delete a user',
+        deleteAllUsers: {
+        method: 'DELETE',
+            path: '/users-all',
+            description: 'Delete all users',
         },
     },
 };
